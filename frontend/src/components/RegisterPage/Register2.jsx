@@ -2,6 +2,9 @@ import React,{useState} from "react";
 import logo from "../../assets/logo.jpeg";
 import { useNavigate } from "react-router-dom";
 
+
+
+
 const Setup=()=>{
     const navigate=useNavigate();
     const [selectedCourse, setSelectedCourse] = useState("");
@@ -9,6 +12,7 @@ const Setup=()=>{
     const [profilePic, setProfilePic] = useState(null);
     const [bio, setBio] = useState("");
     const [ownsBusiness, setOwnsBusiness] = useState();
+    const [error, setError] = useState("");
 
 
   const courseOptions = [
@@ -137,17 +141,26 @@ const Setup=()=>{
 <br></br>
 <button
   onClick={() => {
-    if (ownsBusiness === "yes") {
-      navigate("/business-setup");
-    } else if (ownsBusiness === "no") {
-      navigate("/");
+    if (!ownsBusiness) {
+      setError("Please answer the last question.");
+    } else {
+      setError(""); // clear error
+      if (ownsBusiness === "yes") {
+        navigate("/business-setup");
+      } else {
+        navigate("/");
+      }
     }
   }}
   className="w-full bg-[#D4852D] text-white font-bold py-5 rounded-lg text-3xl hover:bg-black hover:text-[#D4852D] transition-all duration-300"
 >
   NEXT
 </button>
-
+{error && (
+  <div className="text-[#ffa600] text-center mt-2 text-lg font-semibold">
+    {error}
+  </div>
+)}
 
 </div>
     </div> 
