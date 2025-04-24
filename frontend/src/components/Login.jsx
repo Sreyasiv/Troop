@@ -1,10 +1,10 @@
 import React from "react";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/logomain.png";
 import plane from "../assets/plane.png";
 import { useNavigate } from "react-router-dom";
 
-const RegisterPage = () => {
-    const navigate = useNavigate();
+const LoginPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#1A1A1A] text-white relative px-4">
       {/* Logo */}
@@ -20,10 +20,11 @@ const RegisterPage = () => {
 
       {/* Heading */}
       <div className="text-center mb-8 relative z-20">
-        <h2 className="text-5xl font-bold">Create an account</h2>
+        <h2 className="text-5xl font-bold">Welcome Back!</h2>
+        <p className="text-gray-400 text-xl ">We're so excited to see you again!</p>
       </div>
 
-      {/* Register Box */}
+      {/* Login Box */}
       <div className="bg-[#2D2B2B] p-16 rounded-3xl shadow-lg w-full max-w-3xl text-center flex flex-col items-center relative z-20">
         {/* Email */}
         <div className="mb-8 w-full text-left">
@@ -36,26 +37,29 @@ const RegisterPage = () => {
         {/* Password */}
         <div className="mb-8 w-full text-left">
           <label className="block font-semibold text-2xl">
-            Email password <span className="text-red-500">*</span>
+            Password <span className="text-red-500">*</span>
           </label>
           <input type="password" className="w-full p-5 rounded-lg bg-[#D9D9D9] text-black border-none focus:outline-none text-2xl" />
         </div>
 
-        {/* Register Button */}
-        <button onClick={()=>navigate("/setting-up")}
-        className="w-full bg-[#D4852D] text-white font-bold py-5 rounded-lg text-3xl hover:bg-orange-300 transition-all duration-300">
+        {/* Forgot Password */}
+        <div className="text-left w-full mb-8">
+          <a href="#" className="text-gray-400 text-lg relative pb-1 hover:border-b-2 hover:text-[#D4852D] transition-all duration-300">
+            Forgot your password?
+          </a>
+        </div>
 
-          NEXT
+        {/* Login Button */}
+        <button className="w-full bg-[#D4852D] text-white font-bold py-5 rounded-lg text-3xl hover:bg-white hover:text-[#D4852D] transition-all duration-300">
+          LOG IN
         </button>
-        
 
-        {/* Create Account */}
-        <p className="text-gray-400 text-lg mt-6">
+        <p className="text-gray-400 text-lg mt-6 text-center">
           <button 
-            onClick={() => navigate("/login")} 
-            className="relative pb-1 hover:border-b-2 hover:border-gray-400 transition-all duration-300"
+            onClick={() => navigate("/register")} 
+            className="relative pb-1 hover:border-b-2 hover:text-[#D4852D] transition-all duration-300"
           >
-            Already have one?
+            Create an account
           </button>
         </p>
 
@@ -64,4 +68,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default LoginPage;
