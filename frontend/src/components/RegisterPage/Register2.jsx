@@ -135,12 +135,18 @@ const Setup=()=>{
   </button>
 </div>
 <br></br>
-<button onClick={()=>navigate("/business-setup")}
-
-        className="w-full bg-[#D4852D] text-white font-bold py-5 rounded-lg text-3xl hover:bg-black hover:text-[#D4852D] transition-all duration-300">
-            
-          NEXT
-        </button>
+<button
+  onClick={() => {
+    if (ownsBusiness === "yes") {
+      navigate("/business-setup");
+    } else if (ownsBusiness === "no") {
+      navigate("/");
+    }
+  }}
+  className="w-full bg-[#D4852D] text-white font-bold py-5 rounded-lg text-3xl hover:bg-black hover:text-[#D4852D] transition-all duration-300"
+>
+  NEXT
+</button>
 
 
 </div>

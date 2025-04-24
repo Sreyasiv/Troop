@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import heart from "../assets/heart.png";   // update path as needed
+import heart from "../assets/heart.png";   
 import heartf from "../assets/heartf.png";
 
 const Post = ({ username, course, profilePic, content, hashtags, images }) => {
@@ -38,7 +38,7 @@ const Post = ({ username, course, profilePic, content, hashtags, images }) => {
       {/* Body */}
       <div className="mb-4 text-base font-medium text-gray-100">{content}</div>
 
-      {/* Images (if any) */}
+      {/* Images */}
       {images.length > 0 && (
         <div className="grid grid-cols-2 gap-4">
           {images.map((img, i) => (
