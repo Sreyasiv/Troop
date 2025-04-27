@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "../../components/NavBar";
+import MarketNavBar from "./MarketNavBar";
 import Post from "../../components/Post";
-import AddpostBar from "../../components/AddpostBar";
-import eventBanner from "../../assets/learn.jpeg";
+import AddpostBar from "../../components/SearchBar";
+import eventBanner from "../../assets/angaadi.jpeg";
+import NavBar from "../../components/NavBar";
 
 const dummyPosts = [
   {
@@ -27,7 +28,7 @@ const dummyPosts = [
   },
 ];
 
-const Learn = () => {
+const Explore = () => {
   const [posts, setPosts] = useState(dummyPosts);
   const [newContent, setNewContent] = useState("");
 
@@ -37,7 +38,7 @@ const Learn = () => {
 
       <div className="bg-[#1a1a1a] min-h-screen flex flex-col items-center py-6 px-4 sm:px-6 md:px-12 gap-6">
         {/* Banner Image */}
-        <div className="w-full max-w-[2050px] h-[280px] sm:h-[320px] md:h-[380px] lg:h-[420px] rounded-2xl shadow-xl overflow-hidden">
+        <div className="w-full max-w-[2050px] h-[280px] lg:h-[320px] rounded-t-2xl shadow-xl overflow-hidden">
           <img
             src={eventBanner}
             alt="Event Banner"
@@ -45,6 +46,8 @@ const Learn = () => {
           />
         </div>
 
+
+    <MarketNavBar/>
         {/* Add Post Bar */}
         <AddpostBar />
 
@@ -67,4 +70,4 @@ const Learn = () => {
   );
 };
 
-export default Learn;
+export default Explore;
