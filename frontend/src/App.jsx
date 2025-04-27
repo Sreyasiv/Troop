@@ -1,24 +1,36 @@
 // src/App.jsx
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import Lounge from "./pages/lounge/Lounge";
+
 import Login from "./components/Login";
-import RegisterPage from "./components/RegisterPage/Register";
-import CreateAccount from "./components/RegisterPage/Register1";
-import Setup from "./components/RegisterPage/Register2";
+import RegisterPage from "./components/RegisterPage/UserAccount";
+import CreateAccount from "./components/RegisterPage/AccountCreation";
+import Setup from "./components/RegisterPage/AccountSetup";
 import BusinessSetup from "./components/RegisterPage/BusinessRegister";
+import Lounge from "./pages/lounge/Lounge";
+import Events from "./pages/events/Event";
+import Learn from "./pages/learn/Learn";
+import Clubs from "./pages/clubs/Club";
+import Explore from "./pages/market/explore";
+
 
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<Lounge />} /> */}
+        <Route path="/" element={<Lounge />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />}/>
         <Route path="/create-account" element={<CreateAccount />}/>
         <Route path="/account-setup" element={<Setup />}/>
         <Route path="/business-setup" element={<BusinessSetup />}/>
+        <Route path="/events" element={<Events/>}/>
+        <Route path="/learn" element={<Learn />} />
+        <Route path="/clubs" element={<Clubs />} />
+        <Route path="/market-explore" element={<Explore />} />
+
+        
 
       </Routes>
     </Router>
