@@ -28,8 +28,6 @@ Troop is a dynamic college community platform designed to connect students, supp
 
 - Offer a professional yet engaging platform for student businesses.
 
-# High-Fidelity Figma Prototype
-https://www.figma.com/design/i8b0rENIenSJs1NXUU48IZ/Sreya.S_Squad-75_Troop_figma?node-id=0-1&t=EoyZynrS0EGErjg7-1
 
 ## 📌 Capstone Project Plan
 
