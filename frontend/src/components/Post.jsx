@@ -47,7 +47,7 @@ const Post = ({ username, course, profilePic, content, hashtags, images }) => {
               key={i}
               src={img}
               alt={`Post image ${i + 1}`}
-              className="w-full h-40 sm:h-48 object-cover rounded-xl"
+              className="w-auto h-auto max-w-full rounded-xl"
             />
           ))}
         </div>

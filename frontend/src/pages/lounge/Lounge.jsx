@@ -12,21 +12,21 @@ const dummyUser = {
 const dummyPosts = [
     {
         id: 1,
-        username: "Varsha",
+        username: "Demo1",
         course: "BTECH-CSE_WIP",
         profilePic: "https://i.pravatar.cc/150?img=33",
         hashtags: ["#art", "#community"],
-        content: "Very Dull Day.Like a prison I am living my days..No change,Very bored",
+        content: "Hey Welcome to TROOP! Troop is a dynamic college community platform designed to connect students, support freelancers and businesses, share learning resources, and provide event updates.",
         images: []
     },
     {
         id: 2,
-        username: "Sehamedh",
+        username: "Demo2",
         course: "BTECH-CSE_WIP",
         profilePic: "https://i.pravatar.cc/150?img=45",
         hashtags: ["#code", "#react"],
-        content: "I want my girl to be tall,muscular,piercing also nice only..hehehehe no short girl muscular only tall..no long hair very hard to maintain!,nice athelete she shld be,dominant girl be nice *starts blushing* very blah blah blah very talkative,black round glasses she shld have",
-        images: ["https://videos.openai.com/vg-assets/assets%2Ftask_01jsnnz8gvf38t47ns38p1846z%2F1745558215_img_0.webp?st=2025-04-25T04%3A15%3A25Z&se=2025-05-01T05%3A15%3A25Z&sks=b&skt=2025-04-25T04%3A15%3A25Z&ske=2025-05-01T05%3A15%3A25Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=fnT6Y6EVPT8uj%2Fql22bxSUmlC9afaczzAGG4eVLg0go%3D&az=oaivgprodscus"],
+        content: "A hew 24 hackathon at IIT MADRAS,interested students please DM no:9034567891",
+        images: ["https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/261/268/datas/original.jpg"],
     },
 ];
 
