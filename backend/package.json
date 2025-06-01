@@ -10,8 +10,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cloudinary": "^2.6.1",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "mongoose": "^8.15.1"
+    "fs": "^0.0.1-security",
+    "mongoose": "^8.15.1",
+    "multer": "^2.0.0"
   }
 }

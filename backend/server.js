@@ -16,6 +16,10 @@ app.get('/',async(req,res)=>{
   res.json("SERVER is runnnnnningggg!!!!")
 })
 
+const postRoutes = require("./routes/posts");
+app.use("/api", postRoutes);
+
+
 
 
 app.listen(PORT,()=>{
