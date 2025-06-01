@@ -46,4 +46,8 @@ Troop is a dynamic college community platform designed to connect students, supp
 - Week 6: Debugging, optimizations, deployment, and final presentation preparation.
 
 ## Frontend Deployment
-https://thetro.netlify.app/
+https://thetroops.netlify.app/
+
+
+## Backend Deployment
+https://s75-sreya-capstone-troop-1.onrender.com
