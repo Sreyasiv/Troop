@@ -1,26 +1,32 @@
-const mongoose=require("mongoose")
+const mongoose = require("mongoose");
 
-const PostSchema=new mongoose.Schema({
-    title:{
-        type:String,
-        required:true
+const PostSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  picture: {
+    type: String,
+    default: "",
+  },
+  links: {
+    type: [String], 
+    default: [],
+    validate: {
+      validator: function (v) {
+        return v.every(url => /^https?:\/\/\S+$/.test(url));
+      },
+      message: props => `${props.value} contains invalid URLs`,
     },
-    description:{
-        type:String,
-        required:true
-    },
-    picture:{
-        type: String,
-        default:""
-    },
-    links:{
-        type:[String], // Allow multiple optional links
-        default: [],
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    }
-})
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-module.exports = mongoose.model('Post', PostSchema);
+module.exports = mongoose.model("Post", PostSchema);

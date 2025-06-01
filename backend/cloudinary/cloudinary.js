@@ -1,3 +1,4 @@
+const fs = require('fs'); 
 
 const { v2: cloudinary } = require('cloudinary');
 
@@ -14,7 +15,9 @@ const uploadToCloudinary = async (filePath) => {
   try {
     const result = await cloudinary.uploader.upload(filePath);
     return result.secure_url;
-  } catch (err) {
+  } 
+  catch (err) {
+    fs.unlink(filePath, () => {});
     throw err;
   }
 };
