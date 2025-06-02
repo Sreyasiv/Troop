@@ -14,8 +14,6 @@ router.post('/add', upload.single('picture'), async (req, res) => {
   if (!title || !description) {
     return res.status(400).json({ error: "Title and description are required." });
   }
-  
-
 
   let imageUrl = '';
 
