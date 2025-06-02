@@ -48,5 +48,15 @@ router.post('/add', upload.single('picture'), async (req, res) => {
     res.status(500).json({ error: 'Server error while creating post' });
   }
 });
+router.get('/get', async (req, res) => {
+  try {
+    const posts = await Post.find(); // You can also add `.sort({ createdAt: -1 })` if needed
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error('Error fetching posts:', err);
+    res.status(500).json({ error: 'Server error while fetching posts' });
+  }
+});
+
 
 module.exports = router;
