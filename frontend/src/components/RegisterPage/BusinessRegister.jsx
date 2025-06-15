@@ -14,7 +14,7 @@ return (
     </div>
     {/* Heading */}
     <div className="text-center mb-8">
-        <h2 className="text-5xl font-bold">Create an account</h2>
+        <h2 className="text-5xl font-bold">Create your Business</h2>
       </div>
 
       {/* Register Box */}
@@ -72,7 +72,7 @@ return (
           <input type="text" className="w-full p-1 rounded-lg bg-[#D9D9D9] text-black border-none focus:outline-none text-xl" />
 
           
-          <button onClick={()=>navigate("/")}
+          <button onClick={()=>navigate("/lounge")}
           
           className="mt-10 w-full bg-[#D4852D] text-white font-bold py-5 rounded-lg text-3xl hover:bg-black hover:text-[#D4852D] transition-all duration-300">
             SUBMIT
