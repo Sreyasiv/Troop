@@ -148,7 +148,7 @@ const Setup=()=>{
       if (ownsBusiness === "yes") {
         navigate("/business-setup");
       } else {
-        navigate("/");
+        navigate("/lounge");
       }
     }
   }}

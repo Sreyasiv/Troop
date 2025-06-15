@@ -13,7 +13,7 @@ const NavBar = () => {
 
       {/* Navigation Links */}
       <div className="flex items-center gap-6 text-white font-medium text-sm">
-      <Link to="/" className="hover:text-[#D4852D]">Lounge</Link>
+      <Link to="/lounge" className="hover:text-[#D4852D]">Lounge</Link>
       <Link to="/events" className="hover:text-[#D4852D]">Events</Link>
       <Link to="/learn" className="hover:text-[#D4852D]">Learn</Link>
       <Link to="/clubs" className="hover:text-[#D4852D]">Clubs</Link>

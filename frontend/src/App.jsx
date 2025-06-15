@@ -12,6 +12,7 @@ import Events from "./pages/events/Event";
 import Learn from "./pages/learn/Learn";
 import Clubs from "./pages/clubs/Club";
 import Explore from "./pages/market/explore";
+import Index from "./pages/landing/landingPage";
 
 
 
@@ -19,7 +20,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Lounge />} />
+        <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />}/>
         <Route path="/create-account" element={<CreateAccount />}/>
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/learn" element={<Learn />} />
         <Route path="/clubs" element={<Clubs />} />
         <Route path="/market-explore" element={<Explore />} />
+        <Route path="/lounge" element={<Lounge/>}/>
 
         
 
