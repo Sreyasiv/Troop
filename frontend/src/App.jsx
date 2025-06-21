@@ -13,6 +13,7 @@ import Learn from "./pages/learn/Learn";
 import Clubs from "./pages/clubs/Club";
 import Explore from "./pages/market/explore";
 import Index from "./pages/landing/landingPage";
+import Compa from "./pages/Compa/Help"
 
 
 
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/clubs" element={<Clubs />} />
         <Route path="/market-explore" element={<Explore />} />
         <Route path="/lounge" element={<Lounge/>}/>
+        <Route path="/compa" element={<Compa/>}/>
 
         
 
