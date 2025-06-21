@@ -56,12 +56,15 @@ router.post("/", async (req, res) => {
   } catch (err) {
     let message = "Gemma failed to respond 😓";
 
+    let message = "Gemma failed to respond 😓";
+
     if (err.response?.data?.error?.message?.includes("quota")) {
       message = "Your token quota is over for today 💔";
     } else if (err.response?.data?.error?.message?.includes("context_length_exceeded")) {
       message = "Your message is too long 💬✂️";
     } else if (err.code === "ECONNABORTED" || err.message.includes("timeout")) {
       message = "Gemma took too long to respond ⏱️";
+    }
     }
 
     res.status(500).json({ suggestion: `Gemma: ${message}` });
