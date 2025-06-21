@@ -92,6 +92,8 @@ router.post("/autocomplete", async (req, res) => {
     console.error("🔴 Error in autocomplete route:", err);
     let message = "Failed to get autocomplete from Gemma";
 
+    let message = "Failed to get autocomplete from Gemma";
+
     if (err.response?.data?.error?.message?.includes("quota")) {
       message = "Your token quota is over for today 💔";
     } else if (err.response?.data?.error?.message?.includes("context_length_exceeded")) {
