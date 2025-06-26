@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import NavBar from "../../components/NavBar";
-// import Autocomplete from "./autoComplete";
-import getGemmaResponse from "./compadirections";
+import Autocomplete from "../Compa/autoComplete";
+import getGemmaResponse from "../Compa/compadirections";
 
 import send from "../../assets/send.jpeg";
 import compapic from "../../assets/compapic.jpeg";
@@ -144,7 +144,8 @@ const Help = () => {
     />
 
     {/* Autocomplete hook */}
-    <Autocomplete inputValue={input} setGhostText={setGhostText} />
+    <Autocomplete inputValue={input} setGhostText={setGhostText} enable={!loading && input.length > 0} />
+
   </div>
 
   <button
