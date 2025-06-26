@@ -23,7 +23,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err)=>console.log("Err connecting to db",err))
 
 app.get('/',async(req,res)=>{
-  res.json("SERVER is runnnnnningggg!!!!")
+  res.json("SERVER is runningggg!!!!")
 })
 
 const postRoutes = require("./routes/posts");

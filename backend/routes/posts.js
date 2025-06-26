@@ -58,6 +58,40 @@ router.get('/get', async (req, res) => {
   }
 });
 
+router.put('/update/:id', upload.single('picture'), async (req, res) => {
+  const { title, description, links } = req.body;
+  const { id } = req.params;
+
+  try {
+    const updateData = {
+      ...(title && { title }),
+      ...(description && { description }),
+      ...(links && { links: Array.isArray(links) ? links : [links] }),
+    };
+
+    if (req.file) {
+      const imageUrl = await uploadToCloudinary(req.file.path);
+      updateData.picture = imageUrl;
+
+      // Delete local file after upload
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error('Error deleting file:', err);
+      });
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(id, updateData, { new: true });
+
+    if (!updatedPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json({ message: 'Post updated successfully', post: updatedPost });
+  } catch (err) {
+    console.error('Error updating post:', err);
+    res.status(500).json({ error: 'Server error while updating post' });
+  }
+});
+
 
 
 module.exports = router;
