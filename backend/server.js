@@ -1,39 +1,45 @@
-const mongoose=require("mongoose")
-const express=require("express")
-const app=express()
-app.use(express.json())
+import mongoose from "mongoose";
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
-const cors = require("cors");
+import compaRoutes from "./routes/compaRoutes.js";
+import postRoutes from "./routes/posts.js";
 
-const PORT=8000
+dotenv.config();
 
-const dotenv=require("dotenv")
-dotenv.config()
+const app = express();
+const PORT = 8000;
 
+app.use(express.json());
+
+// ✅ CORS setup
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
+  })
+);
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(()=>console.log("db connected"))
-  .catch((err)=>console.log("Err connecting to db",err))
+// ✅ MongoDB connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ DB connected"))
+  .catch((err) => console.error("❌ Error connecting to DB:", err));
 
-app.get('/',async(req,res)=>{
-  res.json("SERVER is runningggg!!!!")
-})
+// ✅ Root route
+app.get("/", (req, res) => {
+  res.json("SERVER is runningggg!!!!");
+});
 
-const postRoutes = require("./routes/posts");
+// ✅ API routes
 app.use("/api", postRoutes);
+app.use("/compa", compaRoutes);
 
-const CompaRoutes = require("./routes/compaRoutes");
-app.use("/api/compaRoutes", CompaRoutes);
-console.log("✅ Compa Routes connected");
-
-
-app.listen(PORT,()=>{
-  console.log(`Server is running on http://localhost:${PORT}`)
-})
+// ✅ Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+});
