@@ -3,13 +3,15 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+
+
 import compaRoutes from "./routes/compaRoutes.js";
 import postRoutes from "./routes/posts.js";
 
 dotenv.config();
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
 
@@ -24,6 +26,7 @@ app.use(
   })
 );
 app.options("*", cors());
+
 // ✅ MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
@@ -34,6 +37,7 @@ mongoose
 app.get("/", (req, res) => {
   res.json("SERVER is runningggg!!!!");
 });
+console.log("✅ Compa routes loaded:", !!compaRoutes);
 
 // ✅ API routes
 app.use("/api", postRoutes);

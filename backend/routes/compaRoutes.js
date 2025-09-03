@@ -39,6 +39,9 @@ let docText = '';
     console.error('❌ Error parsing PDF:', err.message);
   }
 })();
+router.get("/ping", (req, res) => {
+  res.json({ msg: "pong from compa ✅" });
+});
 
 // 🔹 Chat endpoint
 router.post('/ask', async (req, res) => {
