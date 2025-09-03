@@ -27,7 +27,7 @@ const Help = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("https://s75-sreya-capstone-troop-1.onrender.com/compa/ask", {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/compa/ask`, {
         question: userMsg,
       });
       const reply = res.data.answer;
