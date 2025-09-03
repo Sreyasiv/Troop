@@ -10,7 +10,7 @@ const Post = ({ username, course, profilePic, content, hashtags, images }) => {
   };
 
   return (
-    <div className="bg-[#2c2c2c] w-full max-w-[2050px]  rounded-2xl overflow-hidden p-4 sm:p-6 text-white shadow-lg">
+    <div className="bg-zinc-800 w-full max-w-[2050px]  rounded-2xl overflow-hidden p-4 sm:p-6 text-white shadow-lg">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
         <div className="flex items-center gap-3">
