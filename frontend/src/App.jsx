@@ -16,6 +16,7 @@ import Shops from "./pages/market/shops";
 import Thrift from "./pages/market/thrift"; 
 import Index from "./pages/landing/landingPage";
 import Compa from "./pages/Compa/Help"
+import ProfilePage from "./pages/profile/profile";
 
 
 
@@ -37,7 +38,8 @@ const App = () => {
         <Route path="/lounge" element={<Lounge/>}/>
         <Route path="/compa" element={<Compa/>}/>
         <Route path="/shops" element={<Shops />} />
-        <Route path="/Thrift" element={<Thrift />} />
+        <Route path="/thrift" element={<Thrift />} />
+        <Route path="/profile" element={<ProfilePage />} />
 
         
 
