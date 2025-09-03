@@ -19,11 +19,11 @@ app.use(
   cors({
     origin: allowedOrigins,
     methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Content-Type","authorization"],
     credentials: true,
   })
 );
-
+app.options("*", cors());
 // ✅ MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
