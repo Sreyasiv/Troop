@@ -12,8 +12,11 @@ import Events from "./pages/events/Event";
 import Learn from "./pages/learn/Learn";
 import Clubs from "./pages/clubs/Club";
 import Explore from "./pages/market/explore";
+import Shops from "./pages/market/shops";
+import Thrift from "./pages/market/thrift"; 
 import Index from "./pages/landing/landingPage";
 import Compa from "./pages/Compa/Help"
+
 
 
 
@@ -33,6 +36,8 @@ const App = () => {
         <Route path="/market-explore" element={<Explore />} />
         <Route path="/lounge" element={<Lounge/>}/>
         <Route path="/compa" element={<Compa/>}/>
+        <Route path="/shops" element={<Shops />} />
+        <Route path="/Thrift" element={<Thrift />} />
 
         
 
