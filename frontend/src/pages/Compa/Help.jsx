@@ -6,12 +6,17 @@ import send from "../../assets/send.jpeg";
 import compapic from "../../assets/compapic.jpeg";
 import fadedPlane from "../../assets/plane.png";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+console.log("API URL at runtime:", import.meta.env.VITE_API_URL);
+
+
+
 const Help = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      text: "Hi!! Compa here! Do you need any help?",
+      text: "Hi!! Compa here! Do you need any helppppppppppppppppppppppp?",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -27,11 +32,11 @@ const Help = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/compa/ask`, {
+      const res = await axios.post(`${API_URL}/compa/ask`, {
         question: userMsg,
       });
       const reply = res.data.answer;
-      setMessages((prev) => [...prev, { role: "assistant", text: reply }]);
+      setMessages((prev) => [...prev, { role: "assistant", text: reply }]); 
     } catch (err) {
       console.error("Chat error:", err);
       setMessages((prev) => [
