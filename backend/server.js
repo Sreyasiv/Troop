@@ -3,8 +3,6 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-
-
 import compaRoutes from "./routes/compaRoutes.js";
 import postRoutes from "./routes/posts.js";
 
@@ -16,16 +14,25 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 // ✅ CORS setup
-const allowedOrigins = ["https://thetroops.netlify.app", "http://localhost:5173"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://thetroops.netlify.app", // deployed frontend
+];
+
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman or server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type","authorization"],
+    allowedHeaders: ["Content-Type"],
     credentials: true,
   })
 );
-app.options("*", cors());
 
 // ✅ MongoDB connection
 mongoose
@@ -37,7 +44,6 @@ mongoose
 app.get("/", (req, res) => {
   res.json("SERVER is runningggg!!!!");
 });
-console.log("✅ Compa routes loaded:", !!compaRoutes);
 
 // ✅ API routes
 app.use("/api", postRoutes);
