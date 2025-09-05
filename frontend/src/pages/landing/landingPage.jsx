@@ -27,16 +27,15 @@ const HeroSection = () => {
   </h1>
 
   {/* Button */}
-  <button
-    onClick={() => navigate("/register")}
-    className="px-6 py-3 rounded-full font-semibold z-10 mb-4"
-    style={{
-      backgroundColor: "#000000",
-      color: "white",
-    }}
-  >
-    Get Started
-  </button>
+<button
+  onClick={() => navigate("/register")}
+  className="px-6 py-3 rounded-full cursor-pointer font-semibold z-10 mb-4 
+             bg-black text-white transition-colors duration-300 
+             hover:bg-white hover:text-black"
+>
+  Get Started
+</button>
+
 
   {/* Image fixed to bottom */}
   <img
@@ -76,55 +75,73 @@ const Index = () => {
 
       {/* Features */}
       <section className="py-16 px-4">
-        <h2 className="text-3xl font-bold text-center mb-8">Everything you need</h2>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          {features.map((f, idx) => (
-            <div
-              key={idx}
-              className="p-6 rounded-2xl flex items-center justify-center"
-              style={{
-                backgroundColor: f.icon === Plus ? "#FFA541" : "#383535",
-                height: "190px",
-                flexDirection: "column",
-              }}
-            >
-              <div
-                className="flex items-center justify-center"
-                style={{
-                  backgroundColor: f.icon === Plus ? "transparent" : "#FFA541",
-                  color: "white",
-                  width: f.icon === Plus ? "64px" : "48px",
-                  height: f.icon === Plus ? "64px" : "48px",
-                  borderRadius: "0.75rem",
-                }}
-              >
-                <f.icon size={f.icon === Plus ? 48 : 24} />
-              </div>
-
-              {f.icon !== Plus && (
-                <>
-                  <h3 className="font-semibold mt-3">{f.title}</h3>
-                  <p className="text-sm text-gray-400 text-center">{f.description}</p>
-                </>
-              )}
-            </div>
-          ))}
+  <h2 className="text-3xl font-bold text-center mb-8">Everything you need</h2>
+  <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+    {features.map((f, idx) => (
+      <div
+        key={idx}
+        className={`relative p-6 rounded-2xl flex items-center justify-center flex-col 
+                   transform transition-all duration-500 ease-out
+                   hover:scale-105 hover:-translate-y-2 group`}
+        style={{
+          backgroundColor: f.icon === Plus ? "#FFA541" : "#383535",
+          height: "190px",
+        }}
+      >
+        {/* Icon Wrapper */}
+        <div
+          className="flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+          style={{
+            backgroundColor: f.icon === Plus ? "transparent" : "#FFA541",
+            color: "white",
+            width: f.icon === Plus ? "64px" : "56px",
+            height: f.icon === Plus ? "64px" : "56px",
+            borderRadius: "0.75rem",
+          }}
+        >
+          <f.icon
+            size={f.icon === Plus ? 48 : 28}
+            className="transition-transform duration-500 group-hover:scale-125"
+          />
         </div>
-      </section>
+
+        {/* Text */}
+        {f.icon !== Plus && (
+          <>
+            <h3 className="font-semibold mt-4 text-white transition-colors duration-500 group-hover:text-[#FFA541]">
+              {f.title}
+            </h3>
+            <p className="text-sm text-gray-400 text-center transition-opacity duration-500 group-hover:opacity-90">
+              {f.description}
+            </p>
+          </>
+        )}
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* Testimonials */}
-      <section className="py-16 px-4" style={{ backgroundColor: "#383535" }}>
-        <h2 className="text-3xl font-bold text-center mb-8">Student Voices</h2>
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {testimonials.map((t, i) => (
-            <div key={i} className="p-6 rounded-2xl" style={{ backgroundColor: "#1A1A1A" }}>
-              <p className="italic text-gray-300 mb-4">"{t.quote}"</p>
-              <p className="font-bold text-white">{t.name}</p>
-              <p className="text-sm text-gray-400">{t.course}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+<section className="py-16 px-4" style={{ backgroundColor: "#383535" }}>
+  <h2 className="text-3xl font-bold text-center mb-8">Student Voices</h2>
+  <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+    {testimonials.map((t, i) => (
+      <div
+        key={i}
+        className="p-6 rounded-2xl group transition-transform duration-300 hover:scale-105"
+        style={{ backgroundColor: "#1A1A1A" }}
+      >
+        <p className="italic text-gray-300 mb-4">"{t.quote}"</p>
+        <p className="font-bold text-white transition-colors duration-300 group-hover:text-[#FFA541]">
+          {t.name}
+        </p>
+        <p className="text-sm text-gray-400">{t.course}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* Contact */}
       <section className="py-16 px-4 text-center">
@@ -146,13 +163,14 @@ const Index = () => {
       <section className="py-16 px-4 text-center" style={{ backgroundColor: "#FFA541", color: "black" }}>
         <h2 className="text-3xl font-bold mb-4">Ready to join your campus community?</h2>
         <p className="mb-4">Connect, explore, and grow with Troop.</p>
-        <button
-        onClick={() => navigate("/register")}
-          className="px-6 py-2 rounded-full font-semibold"
-          style={{ backgroundColor: "white", color: "#FFA541" }}
-        >
-          Get Started
-        </button>
+<button
+  onClick={() => navigate("/register")}
+  className="px-6 py-3 rounded-full cursor-pointer font-semibold z-10 mb-4 
+             bg-black text-white transition-colors duration-300 
+             hover:bg-white hover:text-black"
+>
+  Get Started
+</button>
       </section>
 
       {/* Footer */}
