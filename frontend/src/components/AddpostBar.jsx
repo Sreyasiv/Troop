@@ -12,7 +12,7 @@ const AddpostBar = () => {
       >
         <input
           type="text"
-          placeholder="add a new post / review / updates"
+          placeholder="Add a new post / Review / Update"
           className="text-[#ff8800] placeholder-black-300 w-full sm:w-[500px] md:w-[650px] lg:w-[800px] xl:w-[950px] flex-1 pointer-events-none text-sm sm:text-base bg-transparent outline-none"
           readOnly
         />

@@ -106,10 +106,11 @@ const Thrift = () => {
           ))}
         </div>
 
-        {/* Floating Add Item Button */}
-        <button className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#f4a261] flex items-center justify-center text-black text-2xl font-bold shadow-lg hover:scale-110 transition">
-          +
-        </button>
+{/* Floating Add Item Button */}
+<button className="fixed bottom-6 right-20 sm:right-6 w-14 h-14 rounded-full bg-[#f4a261] flex items-center justify-center text-black text-2xl font-bold shadow-lg hover:scale-110 transition">
+  +
+</button>
+
       </div>
     </>
   );
