@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchSignInMethodsForEmail, onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase"; // check path
 
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");

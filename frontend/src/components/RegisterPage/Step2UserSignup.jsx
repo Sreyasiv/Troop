@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { auth } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const CreateAccount = () => {
     }
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/users/check-username/${u}`
+        `${API_URL}/api/users/check-username/${u}`
       );
       setUsernameAvailable(res.data.available);
     } catch (err) {
@@ -52,7 +53,7 @@ const CreateAccount = () => {
       const uid = userCred.user.uid;
 
       // 2. Save draft user in Mongo
-      await axios.post("http://localhost:8000/api/users/draft", {
+      await axios.post(`${API_URL}/api/users/draft`, {
         uid,
         email,
         username,
