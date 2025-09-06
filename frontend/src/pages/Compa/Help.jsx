@@ -16,7 +16,7 @@ const Help = () => {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      text: "Hi!! Compa here! Do you need any helppppppppppppppppppppppp?",
+      text: "Hi!! Compa here! Do you need any help?",
     },
   ]);
   const [loading, setLoading] = useState(false);
