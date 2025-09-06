@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 
 import compaRoutes from "./routes/compaRoutes.js";
 import postRoutes from "./routes/posts.js";
+import userRoutes from "./routes/userRoutes.js";
+
+
 
 dotenv.config();
 
@@ -28,12 +31,11 @@ app.use(
       if (allowedOrigins.includes(origin)) return callback(null, true);
       return callback(new Error("Not allowed by CORS"));
     },
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"],
+    allowedHeaders: ["Content-Type","Authorization","Accept", "Origin"],
     credentials: true,
   })
 );
-
 // ✅ MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
@@ -48,6 +50,7 @@ app.get("/", (req, res) => {
 // ✅ API routes
 app.use("/api", postRoutes);
 app.use("/compa", compaRoutes);
+app.use("/api/users", userRoutes);
 
 // ✅ Start server
 app.listen(PORT, () => {

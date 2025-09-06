@@ -3,10 +3,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Login from "./components/Login";
-import RegisterPage from "./components/RegisterPage/UserAccount";
-import CreateAccount from "./components/RegisterPage/AccountCreation";
-import Setup from "./components/RegisterPage/AccountSetup";
-import BusinessSetup from "./components/RegisterPage/BusinessRegister";
+import RegisterPage from "./components/RegisterPage/Step1Email";
+import CreateAccount from "./components/RegisterPage/Step2UserSignup";
+import Setup from "./components/RegisterPage/Step3accSetup";
+import BusinessSetup from "./components/RegisterPage/Step4BusinessSetup";
 import Lounge from "./pages/lounge/Lounge";
 import Events from "./pages/events/Event";
 import Learn from "./pages/learn/Learn";
