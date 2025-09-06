@@ -1,10 +1,110 @@
-import React from "react";
+// frontend/src/components/Auth/LoginPage.jsx
+import React, { useState, useRef, useEffect } from "react";
 import logo from "../assets/logomain.png";
 import plane from "../assets/plane.png";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
+import {
+  signInWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+} from "firebase/auth";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const base = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+
+  // small helper: fetch user progress from backend
+  const fetchUserProgress = async (uid, emailToCheck) => {
+    try {
+      // preferred endpoint
+      const res = await fetch(`${base}/api/users/progress/${uid}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      /* ignore */
+    }
+    try {
+      const res = await fetch(
+        `${base}/api/users/by-email?email=${encodeURIComponent(emailToCheck)}`
+      );
+      if (res.ok) return await res.json();
+    } catch (e) {
+      /* ignore */
+    }
+    return null;
+  };
+
+  const redirectBasedOnProgress = (progress, uid) => {
+    const step = Number(progress?.step) || 0;
+    const ownsBusiness =
+      progress?.ownsBusiness === true || progress?.ownsBusiness === "true";
+
+    if (step === 2 || step === 0) {
+      navigate("/account-setup", { state: { uid, email } });
+      return;
+    }
+    if (step === 3) {
+      if (ownsBusiness) {
+        navigate("/business-setup", { state: { uid, email } });
+      } else {
+        navigate("/lounge");
+      }
+      return;
+    }
+    navigate("/lounge");
+  };
+
+  const handleLogin = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const uid = userCred.user.uid;
+
+      const progress = await fetchUserProgress(uid, email);
+      if (progress) {
+        redirectBasedOnProgress(progress, uid);
+      } else {
+        navigate("/account-setup", { state: { uid, email } });
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      const msg = err?.code ?? err?.message ?? String(err);
+
+      if (msg.includes("auth/user-not-found")) {
+        setError("No account found for this email.");
+      } else if (msg.includes("auth/wrong-password")) {
+        setError("Incorrect password.");
+      } else if (msg.includes("auth/too-many-requests")) {
+        setError("Too many attempts. Try again later.");
+      } else if (msg.includes("auth/email-already-in-use")) {
+        // already in use during signup, fetch progress & redirect
+        try {
+          const methods = await fetchSignInMethodsForEmail(auth, email);
+          console.log("Sign-in methods:", methods);
+
+          const backendUser = await fetchUserProgress(null, email);
+          if (backendUser) {
+            redirectBasedOnProgress(backendUser, backendUser.uid);
+            return;
+          }
+          setError("This email is already in use. Please sign in.");
+        } catch (inner) {
+          setError("This email is already in use.");
+        }
+      } else {
+        setError("Failed to sign in. Try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-[#1A1A1A] text-white relative px-4 overflow-hidden">
       {/* Logo */}
@@ -12,26 +112,19 @@ const LoginPage = () => {
         <img src={logo} alt="Troop Logo" className="h-16 sm:h-20 md:h-24" />
       </div>
 
-      {/* Plane Illustration - Responsive */}
-<div
-  className="absolute bottom-0 right-0 md:right-[8%] lg:right-[10%] xl:right-[0%] 
+      {/* Plane Illustration */}
+      <div
+        className="absolute bottom-0 right-0 md:right-[8%] lg:right-[10%] xl:right-[0%] 
              z-10 w-[75%] sm:w-[65%] md:w-[55%] lg:w-[65%] xl:w-[45%] opacity-90"
->
-  <img 
-    src={plane} 
-    alt="Plane" 
-    className="
-      w-full h-auto object-contain object-bottom
+      >
+        <img
+          src={plane}
+          alt="Plane"
+          className="w-full h-auto object-contain object-bottom
       translate-y-[60px] sm:translate-y-[100px] md:translate-y-[140px] lg:translate-y-[190px]
-      sm:translate-x-[-20px] md:translate-x-[-40px] lg:translate-x-[-70px]
-    "
-  />
-</div>
-
-
-
-
-
+      sm:translate-x-[-20px] md:translate-x-[-40px] lg:translate-x-[-70px]"
+        />
+      </div>
 
       {/* Heading */}
       <div className="text-center mb-6 sm:mb-8 relative z-20 px-2">
@@ -52,6 +145,8 @@ const LoginPage = () => {
           </label>
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 sm:p-4 md:p-5 rounded-lg bg-[#D9D9D9] text-black border-none focus:outline-none text-lg sm:text-xl md:text-2xl"
           />
         </div>
@@ -63,6 +158,8 @@ const LoginPage = () => {
           </label>
           <input
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 sm:p-4 md:p-5 rounded-lg bg-[#D9D9D9] text-black border-none focus:outline-none text-lg sm:text-xl md:text-2xl"
           />
         </div>
@@ -80,9 +177,17 @@ const LoginPage = () => {
         </div>
 
         {/* Login Button */}
-        <button className="w-full bg-[#D4852D] text-white font-bold py-3 sm:py-4 md:py-5 rounded-lg text-xl sm:text-2xl md:text-3xl hover:bg-white hover:text-[#D4852D] transition-all duration-300">
-          LOG IN
+        <button
+          onClick={handleLogin}
+          disabled={loading}
+          className="w-full bg-[#D4852D] text-white font-bold py-3 sm:py-4 md:py-5 rounded-lg text-xl sm:text-2xl md:text-3xl hover:bg-white hover:text-[#D4852D] transition-all duration-300 disabled:opacity-50"
+        >
+          {loading ? "Logging in..." : "LOG IN"}
         </button>
+
+        {error && (
+          <p className="text-red-400 text-sm sm:text-base mt-3">{error}</p>
+        )}
 
         <p className="text-gray-400 text-sm sm:text-base md:text-lg mt-6 text-center">
           <button
