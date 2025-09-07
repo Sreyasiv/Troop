@@ -4,52 +4,80 @@ import logo from "../../assets/logo.jpeg";
 import plane from "../../assets/plane.png";
 import { useNavigate } from "react-router-dom";
 import { fetchSignInMethodsForEmail, onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../../firebase"; // check path
+import { auth } from "../../firebase";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
+const db = getFirestore();
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
-  const [authUser, setAuthUser] = useState(null); // firebase user if logged in
+  const [authUser, setAuthUser] = useState(null);
   const [emailTaken, setEmailTaken] = useState(false);
 
+  const [profile, setProfile] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+
   useEffect(() => {
-    // Watch auth state and set local state
     const unsub = onAuthStateChanged(auth, (user) => {
       setAuthUser(user || null);
     });
     return () => unsub();
   }, []);
 
-  // Basic email validation + firebase check
+  useEffect(() => {
+    let mounted = true;
+    const fetchProfile = async () => {
+      if (!authUser || !authUser.uid) {
+        setProfile(null);
+        return;
+      }
+
+      setProfileLoading(true);
+      try {
+        const ref = doc(db, "users", authUser.uid);
+        const snap = await getDoc(ref);
+        if (!mounted) return;
+        setProfile(snap.exists() ? snap.data() : null);
+      } catch (err) {
+        console.error("Failed fetching user profile:", err);
+        setProfile(null);
+      } finally {
+        if (mounted) setProfileLoading(false);
+      }
+    };
+
+    fetchProfile();
+    return () => { mounted = false; };
+  }, [authUser]);
+
+  // decide the correct next route based on profile fields
+  const getNextRoute = (userProfile) => {
+    if (!userProfile) return "/account-setup";
+    const { isSetupComplete, accountSetupComplete, businessSetupComplete, ownsBusiness } = userProfile || {};
+    if (!accountSetupComplete) return "/account-setup";
+    if (ownsBusiness && !businessSetupComplete) return "/business-setup";
+    if (!isSetupComplete) return "/create-account";
+    return "/lounge";
+  };
+
+  // NOTE: auto-redirect removed. navigation only happens when user clicks the banner button.
+
   const checkEmail = async (candidateEmail) => {
-    // reset previous
     setEmailTaken(false);
     setError("");
 
-    // 1. required
-    if (!candidateEmail.trim()) {
-      return { valid: false, message: "Email is required" };
-    }
-
-    // 2. basic format
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidateEmail)) {
-      return { valid: false, message: "Enter a valid email address" };
-    }
-
-    // 3. domain
+    if (!candidateEmail.trim()) return { valid: false, message: "Email is required" };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidateEmail)) return { valid: false, message: "Enter a valid email address" };
     if (!(candidateEmail.endsWith("@vistas.ac.in") || candidateEmail.endsWith("@kalvium.community"))) {
       return { valid: false, message: "Email must be from Vistas or Kalvium" };
     }
-
-    // 4. If someone is already logged in with a different email, warn them
     if (authUser && authUser.email && authUser.email !== candidateEmail) {
       return { valid: false, message: `You're currently signed in as ${authUser.email}. Logout to sign up with a different email.` };
     }
 
-    // 5. Firebase availability check
     try {
       setChecking(true);
       const methods = await fetchSignInMethodsForEmail(auth, candidateEmail);
@@ -73,7 +101,6 @@ const RegisterPage = () => {
       setError(result.message);
       return;
     }
-    // pass email forward to Step 2 (create-account)
     navigate("/create-account", { state: { email } });
   };
 
@@ -81,6 +108,7 @@ const RegisterPage = () => {
     try {
       await signOut(auth);
       setAuthUser(null);
+      setProfile(null);
       setError("");
     } catch (err) {
       console.error("Logout failed", err);
@@ -114,7 +142,7 @@ const RegisterPage = () => {
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">Create an account</h2>
       </div>
 
-      {/* If already signed in, show banner with actions */}
+      {/* If already signed in, show banner with actions (manual navigation only) */}
       {authUser && (
         <div className="mb-4 w-full max-w-lg md:max-w-2xl bg-[#2b2b2b] border border-yellow-500 p-4 rounded-xl text-left z-20">
           <div className="flex items-start justify-between">
@@ -125,12 +153,21 @@ const RegisterPage = () => {
             </div>
 
             <div className="flex flex-col gap-2">
+              {/* Now requires an explicit click to navigate */}
               <button
-                onClick={() => navigate("/lounge")}
-                className="px-3 py-2 rounded bg-[#D4852D] text-black font-semibold"
+                onClick={() => {
+                  if (!profileLoading) {
+                    const next = getNextRoute(profile);
+                    navigate(next);
+                  }
+                }}
+                className={`px-3 py-2 rounded bg-[#D4852D] text-black font-semibold ${
+                  profileLoading ? "opacity-60 cursor-wait" : ""
+                }`}
               >
-                Go to Lounge
+                {profileLoading ? "Checking next step…" : "Take me to next step"}
               </button>
+
               <button
                 onClick={handleLogout}
                 className="px-3 py-2 rounded border border-gray-400 text-gray-200"
@@ -159,7 +196,7 @@ const RegisterPage = () => {
             }}
             className="w-full p-3 sm:p-4 md:p-5 rounded-lg bg-[#D9D9D9] text-black border-none focus:outline-none text-lg sm:text-xl md:text-2xl"
             placeholder="Enter your email"
-            disabled={!!authUser} // if signed in, block editing to avoid confusion
+            disabled={!!authUser}
           />
         </div>
 
@@ -179,13 +216,14 @@ const RegisterPage = () => {
           NEXT
         </button>
 
-        {/* Already have account */}
+        {/* Already have account - DISABLED when authUser is present */}
         <p className="text-gray-400 text-sm sm:text-base md:text-lg mt-6 text-center">
           <button
-            onClick={() => navigate("/login")}
-            className="relative pb-1 text-gray-400 hover:text-[#D4852D] 
+            onClick={() => !authUser && navigate("/login")}
+            disabled={!!authUser}
+            className={`relative pb-1 ${authUser ? "text-gray-600 cursor-not-allowed" : "text-gray-400 hover:text-[#D4852D]"} 
                        after:block after:h-[2px] after:bg-[#D4852D] after:w-0 
-                       after:transition-all after:duration-300 hover:after:w-full"
+                       after:transition-all after:duration-300 hover:after:w-full`}
           >
             Already have one?
           </button>
