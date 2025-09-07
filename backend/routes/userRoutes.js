@@ -225,6 +225,58 @@ router.patch("/business/:uid", async (req, res) => {
     return res.status(500).json({ error: "Could not update business" });
   }
 });
+// -------------------------
+// GET /api/users/progress/:uid
+// Returns normalized progress for a given firebase uid OR mongo _id
+// -------------------------
+router.get("/progress/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    let user = await User.findOne({ uid }).lean();
+
+    // fallback: maybe caller gave Mongo _id
+    if (!user && /^[0-9a-fA-F]{24}$/.test(uid)) {
+      user = await User.findById(uid).lean();
+    }
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.json({
+      step: user.step ?? null,
+      ownsBusiness: user.ownsBusiness ?? false,
+      uid: user.uid ?? user._id,
+      raw: user,
+    });
+  } catch (err) {
+    console.error("GET /progress/:uid error:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+// -------------------------
+// GET /api/users/by-email?email=...
+// Returns normalized progress by email
+// -------------------------
+router.get("/by-email", async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ error: "email is required" });
+
+    const user = await User.findOne({ email }).lean();
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.json({
+      step: user.step ?? null,
+      ownsBusiness: user.ownsBusiness ?? false,
+      uid: user.uid ?? user._id,
+      raw: user,
+    });
+  } catch (err) {
+    console.error("GET /by-email error:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 
 
