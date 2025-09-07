@@ -51,7 +51,7 @@ const BusinessSetup = () => {
         fd.append("logo", logoFile);
 
         const uploadRes = await fetch(
-          `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/users/upload-logo/${uid}`,
+          `${import.meta.env.VITE_API_URL}/api/users/upload-logo/${uid}`,
           {
             method: "POST",
             body: fd,
@@ -69,7 +69,7 @@ const BusinessSetup = () => {
 
       // 2) Send business details (include logoUrl if present)
       const patchRes = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/users/business/${uid}`,
+        `${import.meta.env.VITE_API_URL}/api/users/business/${uid}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
