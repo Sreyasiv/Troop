@@ -80,7 +80,7 @@ const Setup = () => {
       if (profilePicFile) formData.append("profilePic", profilePicFile);
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/users/setup/${user.uid}`,
+        `${import.meta.env.VITE_API_URL}/api/users/setup/${user.uid}`,
         {
           method: "PUT",
           body: formData,
