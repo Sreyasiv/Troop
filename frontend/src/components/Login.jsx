@@ -18,7 +18,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
 
   // fallback when env var isn't set
-  const base = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+  const base = import.meta.env.VITE_API_URL;
 
   // navigation guard to avoid double redirects
   const didNavigateRef = useRef(false);
