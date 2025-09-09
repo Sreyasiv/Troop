@@ -21,25 +21,24 @@ if (CLOUD_NAME && API_KEY && API_SECRET) {
   console.warn("Cloudinary: missing credentials. Set CLOUDINARY_NAME, CLOUDINARY_KEY, CLOUDINARY_SECRET in backend .env");
 }
 
-export const uploadToCloudinary = async (filePath, folder = "troop") => {
-  if (!CLOUD_NAME || !API_KEY || !API_SECRET) {
-    try { fs.unlinkSync(filePath); } catch (e) {}
-    throw new Error("Cloudinary not configured. Set CLOUDINARY_NAME, CLOUDINARY_KEY, CLOUDINARY_SECRET in backend .env");
-  }
-
+export const uploadToCloudinary = async (filePath, folder = "posts") => {
   try {
     const res = await cloudinary.v2.uploader.upload(filePath, {
       folder,
+      resource_type: "auto",   // 👈 accept images & videos
       use_filename: true,
       unique_filename: false,
-      overwrite: false,
     });
+
     // cleanup temp file
-    fs.unlink(filePath, (err) => { if (err) console.warn("Failed to unlink temp file:", err); });
+    fs.unlink(filePath, (err) => {
+      if (err) console.warn("Temp file cleanup failed:", err);
+    });
+
     return res.secure_url;
   } catch (err) {
-    try { fs.unlinkSync(filePath); } catch (e) {}
-    console.error("Cloudinary upload error:", err.message || err);
+    console.error("Cloudinary upload error:", err);
+    try { fs.unlinkSync(filePath); } catch {}
     throw err;
   }
 };

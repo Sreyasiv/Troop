@@ -4,8 +4,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import compaRoutes from "./routes/compaRoutes.js";
-import postRoutes from "./routes/posts.js";
+import postRoutes from "./routes/postRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import { verifyToken } from "./middleware/verifyToken.js";
 
 
 
@@ -26,7 +27,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like Postman or server-to-server)
+      
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
       return callback(new Error("Not allowed by CORS"));
@@ -48,9 +49,15 @@ app.get("/", (req, res) => {
 });
 
 // ✅ API routes
-app.use("/api", postRoutes);
+app.use("/api/posts", postRoutes);
 app.use("/compa", compaRoutes);
 app.use("/api/users", userRoutes);
+
+
+app.get("/token/protected-route", verifyToken, (req, res) => {
+  // if token is good, middleware sets req.user.uid
+  res.json({ ok: true, uid: req.user.uid });
+});
 
 // ✅ Start server
 app.listen(PORT, () => {
