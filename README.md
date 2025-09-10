@@ -29,21 +29,6 @@ Troop is a dynamic college community platform designed to connect students, supp
 - Offer a professional yet engaging platform for student businesses.
 
 
-## 📌 Capstone Project Plan
-
-### Weekly Plan (4-6 Weeks)
-
-- Week 1: Research, finalize features, and set up repository.
-
-- Week 2: Design wireframes, plan UI/UX, and start frontend development.
-
-- Week 3: Develop authentication, user onboarding, and community boards.
-
-- Week 4: Build event hub, notifications, and thrift store features.
-
-- Week 5: Integrate campus guide bot, refine AI-based recommendations, and testing.
-
-- Week 6: Debugging, optimizations, deployment, and final presentation preparation.
 
 ## Frontend Deployment
 https://thetroops.netlify.app/
