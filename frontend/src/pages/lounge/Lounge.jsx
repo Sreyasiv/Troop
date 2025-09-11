@@ -10,20 +10,22 @@ const carouselImages = [
   "https://img.freepik.com/premium-vector/space-exploration-adventure-vector-retro-poster_8071-45275.jpg",
 ];
 
-// Configure API host: set VITE_API in frontend .env or fallback to localhost:8000
-
-
 export default function Lounge() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [error, setError] = useState(null);
 
+  // Hardcoded community for this page
+  const community = "lounge";
+
   const fetchPosts = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`);
+      const base = `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/posts`;
+      const url = `${base}?community=${community}`;
+      const res = await fetch(url);
       if (!res.ok) {
         const text = await res.text();
         throw new Error(`Failed to fetch posts: ${res.status} ${text}`);
@@ -37,7 +39,7 @@ export default function Lounge() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [community]);
 
   useEffect(() => {
     fetchPosts();
@@ -60,10 +62,7 @@ export default function Lounge() {
 
   // When AddpostBar notifies of created post, re-fetch so backend can attach `user`
   const handlePostCreated = async (newPostResult) => {
-    // newPostResult may be { message, post } or the post itself
-    // We simply re-fetch the feed to guarantee the user object is attached by GET handler
     await fetchPosts();
-    // optionally scroll to top
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -96,16 +95,18 @@ export default function Lounge() {
               const user = p.user || {};
               return (
                 <Post
-                    key={p._id || p.id}
-                    username={user.username || p.username || "Unknown"}
-                    course={user.course || p.course || ""}
-                    profilePic={user.profilePic || p.profilePic || "https://i.pravatar.cc/150"}
-                    hashtags={p.hashtags || []}
-                    contentHtml={p.contentHtml ?? p.content}
-                    media={p.media ?? p.images ?? []}
-                    content={p.content}
-                    createdAt={p.createdAt}   
-                    />
+                  key={p._id || p.id}
+                  username={user.username || p.username || "Unknown"}
+                  course={user.course || p.course || ""}
+                  profilePic={user.profilePic || p.profilePic || "https://i.pravatar.cc/150"}
+                  
+                  contentHtml={p.contentHtml ?? p.content}
+                  media={p.media ?? p.images ?? []}
+                  attachments={p.attachments ?? []}
+                  community={p.community || "lounge"}
+                  content={p.content}
+                  createdAt={p.createdAt}
+                />
               );
             })
           )}

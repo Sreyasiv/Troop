@@ -9,9 +9,9 @@ const MarketNavBar = () => {
      
       {/* Navigation Links */}
       <div className="flex items-center gap-6 text-black font-medium text-sm ">
-      <Link to="/market-explore" className="hover:text-black hover:underline hover:decoration-[#000000] hover:underline-offset-[3px]">Explore</Link>
-      <Link to="/Shops" className="hover:text-black hover:underline hover:decoration-[#000000] hover:underline-offset-[3px] ">Shops</Link>
-      <Link to="/Thrift" className="hover:text-black hover:underline hover:decoration-[#000000] hover:underline-offset-[3px]">Thrift</Link>
+      <Link to="/explore" className="hover:text-black hover:underline hover:decoration-[#000000] hover:underline-offset-[3px]">Explore</Link>
+      <Link to="/shops" className="hover:text-black hover:underline hover:decoration-[#000000] hover:underline-offset-[3px] ">Shops</Link>
+      <Link to="/thrift" className="hover:text-black hover:underline hover:decoration-[#000000] hover:underline-offset-[3px]">Thrift</Link>
       </div>
 
       

@@ -17,6 +17,7 @@ import Thrift from "./pages/market/thrift";
 import Index from "./pages/landing/landingPage";
 import Compa from "./pages/Compa/Help"
 import ProfilePage from "./pages/profile/profile";
+import ClubBuzz from "./pages/clubs/clubBuzz";
 
 
 
@@ -34,12 +35,13 @@ const App = () => {
         <Route path="/events" element={<Events/>}/>
         <Route path="/learn" element={<Learn />} />
         <Route path="/clubs" element={<Clubs />} />
-        <Route path="/market-explore" element={<Explore />} />
+        <Route path="/explore" element={<Explore />} />
         <Route path="/lounge" element={<Lounge/>}/>
         <Route path="/compa" element={<Compa/>}/>
         <Route path="/shops" element={<Shops />} />
         <Route path="/thrift" element={<Thrift />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/club-buzz" element={<ClubBuzz />} />
 
         
 

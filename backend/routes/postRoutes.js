@@ -2,18 +2,22 @@
 import express from "express";
 import multer from "multer";
 import mongoose from "mongoose";
+import fs from "fs";
 import Post from "../models/PostSchema.js";
 import User from "../models/UserSchema.js";
 import { uploadToCloudinary } from "../cloudinary/cloudinary.js";
-import  { verifyToken }  from "../middleware/verifyToken.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
-
+// GET /api/posts?community=...
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 }).lean();
+    const q = req.query.community;
+    const filter = {};
+    if (q && q !== "all") filter.community = q;
+    const posts = await Post.find(filter).sort({ createdAt: -1 }).lean();
     const userIds = Array.from(new Set(posts.map(p => p.userId).filter(Boolean)));
 
     if (userIds.length === 0) {
@@ -69,10 +73,19 @@ router.get("/", async (req, res) => {
   }
 });
 
-
+// POST /api/posts  (JSON) - stores community for text-only posts
 router.post("/", verifyToken, async (req, res) => {
   try {
-    const { contentHtml, media } = req.body;
+    // debug log (optional) - remove when stable
+    console.log(">>> SERVER: POST /api/posts body:", JSON.stringify(req.body));
+
+    const { contentHtml, media, community: rawCommunity } = req.body;
+    const community = String((rawCommunity || "lounge")).toLowerCase();
+    const allowedCommunities = ["lounge", "learn", "market-explore","club-buzz"];
+    if (!allowedCommunities.includes(community)) {
+      return res.status(400).json({ error: "Invalid community" });
+    }
+
     const hasContent = contentHtml && contentHtml.trim().length > 0;
     const hasMedia = Array.isArray(media) && media.length > 0;
     if (!hasContent && !hasMedia) return res.status(400).json({ error: "Post must have content or media" });
@@ -81,6 +94,7 @@ router.post("/", verifyToken, async (req, res) => {
       userId: req.user.uid,
       contentHtml: contentHtml || "",
       media: hasMedia ? media : [],
+      community,
     });
 
     // attach user for convenience
@@ -102,6 +116,7 @@ router.post("/", verifyToken, async (req, res) => {
       } : null,
     };
 
+    console.log(">>> SERVER: Created post with community:", community, "id:", newPost._id);
     return res.status(201).json(payload);
   } catch (err) {
     console.error("Error creating post:", err);
@@ -109,16 +124,23 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-
+// POST /api/posts/add  (multipart, files)
 router.post(
   "/add",
-  verifyToken,                 // verify token first
-  upload.array("media", 5),    // then multer
+  verifyToken,
+  upload.any(),
   async (req, res) => {
     try {
-      const { contentHtml: incomingHtml, title, description } = req.body;
+      const { contentHtml: incomingHtml, title, description, community: rawCommunity } = req.body;
 
-      // Normalize contentHtml (same as before)
+      // normalize community
+      const community = String((rawCommunity || "lounge")).toLowerCase();
+      const allowedCommunities = ["lounge", "learn", "market-explore","club-buzz"];
+      if (!allowedCommunities.includes(community)) {
+        return res.status(400).json({ error: "Invalid community" });
+      }
+
+      // Normalize contentHtml
       let contentHtml = incomingHtml && String(incomingHtml).trim()
         ? String(incomingHtml).trim()
         : "";
@@ -130,48 +152,89 @@ router.post(
         contentHtml = parts.join("\n");
       }
 
-      // 🔽 Upload each file to Cloudinary
-      let media = [];
-      if (req.files && req.files.length > 0) {
-        for (const file of req.files) {
-          try {
-            let uploadedUrl = await uploadToCloudinary(file.path, "posts");
+      const files = Array.isArray(req.files) ? req.files : [];
+      const MAX_FILES = 5;
+      if (files.length > MAX_FILES) {
+        return res.status(400).json({ error: `Max ${MAX_FILES} files allowed` });
+      }
 
-            // Resize images only (skip for videos)
-            if (file.mimetype.startsWith("image/")) {
-              let resizedUrl = uploadedUrl.replace("/upload/", "/upload/w_600,h_400,c_fill/");
-              media.push({ url: resizedUrl, type: "image", alt: title || "" });
-            } else if (file.mimetype.startsWith("video/")) {
-              media.push({ url: uploadedUrl, type: "video", alt: title || "" });
+      const imageMime = /^image\//;
+      const videoMime = /^video\//;
+      const docMimes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ];
+
+      let media = [];
+      let attachments = [];
+
+      const uploadAndCleanup = async (file, folder) => {
+        const uploadedUrl = await uploadToCloudinary(file.path, `posts/${folder}`);
+        try { fs.unlinkSync(file.path); } catch (e) { /* ignore */ }
+        return {
+          url: uploadedUrl,
+          filename: file.originalname,
+          mimeType: file.mimetype,
+          size: file.size
+        };
+      };
+
+      for (const file of files) {
+        try {
+          if (community === "learn") {
+            if (imageMime.test(file.mimetype) || docMimes.includes(file.mimetype)) {
+              const up = await uploadAndCleanup(file, "learn");
+              attachments.push(up);
+              if (imageMime.test(file.mimetype)) {
+                const resized = up.url.replace("/upload/", "/upload/w_600,h_400,c_fill/");
+                media.push({ url: resized, type: "image", alt: up.filename || "" });
+              }
+            } else {
+              try { fs.unlinkSync(file.path); } catch (e) { /* ignore */ }
             }
-          } catch (uploadErr) {
-            console.error("Cloudinary upload failed:", uploadErr);
+          } else {
+            if (imageMime.test(file.mimetype)) {
+              const up = await uploadAndCleanup(file, community);
+              const resized = up.url.replace("/upload/", "/upload/w_600,h_400,c_fill/");
+              media.push({ url: resized, type: "image", alt: up.filename || "" });
+            } else if (videoMime.test(file.mimetype)) {
+              const up = await uploadAndCleanup(file, community);
+              media.push({ url: up.url, type: "video", alt: up.filename || "" });
+            } else {
+              try { fs.unlinkSync(file.path); } catch (e) { /* ignore */ }
+            }
           }
+        } catch (upErr) {
+          console.error("Cloudinary upload failed:", upErr);
+          try { fs.unlinkSync(file.path); } catch (e) { /* ignore */ }
         }
       }
 
-      // Save post in DB
+      const hasContent = contentHtml && contentHtml.trim().length > 0;
+      const hasAnyFile = media.length > 0 || attachments.length > 0;
+      if (!hasContent && !hasAnyFile) {
+        return res.status(400).json({ error: "Post must have content or attachments/media" });
+      }
+
       const newPost = await Post.create({
         userId: req.user.uid,
         contentHtml,
         media,
+        attachments,
+        community
       });
 
-      // Attach user info (same as before)
       const user = await User.findOne({
         $or: [
           { uid: req.user.uid },
           { firebaseUid: req.user.uid },
-          {
-            _id: mongoose.Types.ObjectId.isValid(req.user.uid)
-              ? req.user.uid
-              : null,
-          },
+          ...(mongoose.Types.ObjectId.isValid(req.user.uid) ? [{ _id: mongoose.Types.ObjectId(req.user.uid) }] : [])
         ],
       }).lean();
 
       const payload = {
-        ...newPost.toObject ? newPost.toObject() : newPost,
+        ...(newPost.toObject ? newPost.toObject() : newPost),
         user: user
           ? {
               username: user.username,
@@ -182,18 +245,12 @@ router.post(
           : null,
       };
 
-      return res
-        .status(201)
-        .json({ message: "Post created successfully", post: payload });
+      return res.status(201).json({ message: "Post created successfully", post: payload });
     } catch (err) {
       console.error("Error creating multipart post (/add):", err);
-      return res
-        .status(500)
-        .json({ error: "Server error while creating post" });
+      return res.status(500).json({ error: "Server error while creating post" });
     }
   }
 );
-    
-  ;
 
 export default router;
