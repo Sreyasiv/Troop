@@ -7,6 +7,7 @@ import photo from "../../assets/photo.png";
 import aesthetica from "../../assets/aesthetica.jpeg";
 import thirai from "../../assets/thirai.jpeg";
 import SearchBar from "../../components/SearchBar";
+import ClubNavBar from "./clubNavbar";
 
 const clubData = [
   { id: "resonance", keywords: "resonance music", img: resonance },
@@ -35,7 +36,7 @@ const Clubs = () => {
         <div className="w-full max-w-[2050px] lg:h-[420px] rounded-[12px] shadow-xl overflow-hidden">
           <img src={clubs} alt="Event Banner" className="w-full h-full object-cover" />
         </div>
-
+        <ClubNavBar />
         {/* Search Bar */}
         <SearchBar onSearch={handleSearch} />
 

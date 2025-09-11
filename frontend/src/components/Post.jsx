@@ -1,4 +1,4 @@
-// Post.jsx
+// src/components/Post.jsx
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import DOMPurify from "dompurify";
@@ -167,6 +167,7 @@ const Post = ({
   hashtags = [],
   images = [],
   media = [],
+  attachments = [], // new prop (array of {url, filename, mimeType, size})
   createdAt,
 }) => {
   const [liked, setLiked] = useState(false);
@@ -184,13 +185,19 @@ const Post = ({
       ? images.map((url) => ({ url, type: "image", alt: "" }))
       : [];
 
-  const formattedDate = createdAt
-    ? new Date(createdAt).toLocaleDateString("en-US", {
+  // SHOW DATE + TIME (example: "Sep 11, 2025, 4:23 PM")
+  const formattedDateTime = createdAt
+    ? new Date(createdAt).toLocaleString("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
       })
     : "";
+
+  // ISO timestamp for precise copy (shown as tooltip)
+  const isoTimestamp = createdAt ? new Date(createdAt).toISOString() : "";
 
   // Defensive: log if portal root missing when opening
   useEffect(() => {
@@ -198,6 +205,17 @@ const Post = ({
       console.info("Creating lightbox root in document.body");
     }
   }, [lightboxUrl]);
+
+  // Helper: filter attachments to show only non-image docs (pdf/doc/docx)
+  const docMimes = new Set([
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ]);
+
+  const docAttachments = Array.isArray(attachments)
+    ? attachments.filter((a) => a && a.mimeType && docMimes.has(a.mimeType))
+    : [];
 
   return (
     <div className="bg-zinc-800 w-full max-w-[2050px] rounded-2xl overflow-visible p-4 sm:p-6 text-white shadow-lg">
@@ -218,8 +236,14 @@ const Post = ({
         </div>
 
         <div className="flex flex-col items-end gap-1">
-          {formattedDate && (
-            <p className="text-xs sm:text-sm text-gray-400">{formattedDate}</p>
+          {formattedDateTime && (
+            // show formatted date+time; hover reveals ISO timestamp for copy
+            <p
+              className="text-xs sm:text-sm text-gray-400"
+              title={isoTimestamp}
+            >
+              {formattedDateTime}
+            </p>
           )}
 
           <div className="flex flex-wrap gap-2 justify-end sm:max-w-[200px]">
@@ -240,7 +264,7 @@ const Post = ({
         <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
       </div>
 
-      {/* Media previews */}
+      {/* Media previews (images/videos) */}
       {unifiedMedia.length > 0 && (
         <div
           className={`grid gap-4 ${
@@ -268,6 +292,44 @@ const Post = ({
               </div>
             )
           )}
+        </div>
+      )}
+
+      {/* Attachments (PDF / DOC / DOCX) - simple list, no thumbnails */}
+      {docAttachments.length > 0 && (
+        <div className="mt-4 p-3 bg-gray-900 rounded-md border border-gray-800">
+          <p className="text-sm text-gray-300 mb-2 font-semibold">Attachments</p>
+          <ul className="flex flex-col gap-2">
+            {docAttachments.map((a, idx) => (
+              <li key={idx} className="flex items-center justify-between gap-3 bg-gray-800 p-2 rounded">
+                <div className="flex items-center gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-orange-400"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6" />
+                  </svg>
+                  <div className="text-sm text-gray-100">
+                    {a.filename || a.url.split("/").pop() || `attachment-${idx + 1}`}
+                    <div className="text-xs text-gray-400">{a.mimeType}{a.size ? ` • ${(a.size/1024).toFixed(0)} KB` : ""}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={a.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1 text-sm rounded bg-orange-500 text-white hover:opacity-90"
+                  >
+                    Open / Download
+                  </a>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
