@@ -1,6 +1,10 @@
-import React from "react";
+// LandingPage.jsx
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import troop from "../../assets/troop.png";
+import devPhoto from "../../assets/dev-photo.jpeg"; // replace path if needed
+import AboutDevDrawer from "./Aboutdevdrawer"; // make sure filename + path match
+
 import {
   Users,
   ShoppingBag,
@@ -12,42 +16,61 @@ import {
   Plus,
 } from "lucide-react";
 
-// Hero Section Component
-const HeroSection = () => {
+// Hero Section Component — now receives onOpenAbout and devPhotoSrc from parent
+const HeroSection = ({ onOpenAbout, devPhotoSrc }) => {
   const navigate = useNavigate();
+  const fallbackAvatar =
+    "data:image/svg+xml;utf8," +
+    encodeURIComponent(
+      `<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><rect fill='%23FFA541' rx='16' width='100%' height='100%'/><text x='50%' y='55%' font-size='48' text-anchor='middle' fill='white' font-family='Verdana'>S</text></svg>`
+    );
+
   return (
     <section
-  className="relative flex flex-col items-center text-center"
-  style={{ backgroundColor: "#FFA541", height: "400px" }}
->
-  {/* Heading */}
-  <h1 className="text-5xl sm:text-6xl font-bold mt-20 mb-6 z-10" style={{ fontFamily: 'Verdana' }}>
+      className="relative flex flex-col items-center text-center"
+      style={{ backgroundColor: "#FFA541", height: "400px" }}
+    >
+      {/* Top right about button */}
+      <div className="absolute right-6 top-6 z-30">
+        <button
+          onClick={onOpenAbout}
+          className="flex items-center gap-2 px-3 py-2 rounded-full bg-black text-white hover:bg-white hover:text-black transition-transform transform hover:-translate-y-0.5 hover:scale-105"
+          aria-label="About the dev"
+        >
+          <img
+            src={devPhotoSrc || fallbackAvatar}
+            alt="dev avatar"
+            className="w-8 h-8 rounded-full object-cover border-2 border-white"
+            onError={(e) => (e.currentTarget.src = fallbackAvatar)}
+          />
+          <span className="hidden sm:inline">About the developer</span>
+        </button>
+      </div>
 
-    Welcome to <span style={{ color: "#000000" }}>Troop</span>
-  </h1>
+      {/* Heading */}
+      <h1 className="text-5xl sm:text-6xl font-bold mt-20 mb-6 z-10" style={{ fontFamily: "Verdana" }}>
+        Welcome to <span style={{ color: "#000000" }}>Troop</span>
+      </h1>
 
-  {/* Button */}
-<button
-  onClick={() => navigate("/register")}
-  className="px-6 py-3 rounded-full cursor-pointer font-semibold z-10 mb-4 
-             bg-black text-white transition-colors duration-300 
-             hover:bg-white hover:text-black"
->
-  Get Started
-</button>
+      {/* Button */}
+      <button
+        onClick={() => navigate("/register")}
+        className="px-6 py-3 rounded-full cursor-pointer font-semibold z-10 mb-4 bg-black text-white transition-colors duration-300 hover:bg-white hover:text-black transform hover:-translate-y-1"
+      >
+        Get Started
+      </button>
 
-
-  {/* Image fixed to bottom */}
-  <img
-    src={troop}
-    alt="Troop Characters"
-    className="absolute bottom-0 w-[70%] max-w-md object-contain opacity-90"
-  />
-</section>
-
-  )
+      {/* Image fixed to bottom (kept as-is) */}
+      <img
+        src={troop}
+        alt="Troop Characters"
+        className="absolute bottom-0 w-[70%] max-w-md object-contain opacity-90"
+      />
+    </section>
+  );
 };
-// Main Page
+
+// Main Page data
 const features = [
   { icon: MessageSquare, title: "Lounge", description: "Post and share thoughts" },
   { icon: ShoppingBag, title: "Angaadi", description: "Explore student-run shops" },
@@ -67,81 +90,77 @@ const testimonials = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const devPhotoSrc = devPhoto; // fallback handled in drawer/HeroSection
+
   return (
-    
     <div className="min-h-screen text-white font-sans" style={{ backgroundColor: "#1A1A1A" }}>
+      {/* About Drawer (mounted at parent so it can be opened from anywhere) */}
+      <AboutDevDrawer open={aboutOpen} onClose={() => setAboutOpen(false)} devPhotoSrc={devPhotoSrc} />
+
       {/* Hero */}
-      <HeroSection />
+      <HeroSection onOpenAbout={() => setAboutOpen(true)} devPhotoSrc={devPhotoSrc} />
 
       {/* Features */}
       <section className="py-16 px-4">
-  <h2 className="text-3xl font-bold text-center mb-8">Everything you need</h2>
-  <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-    {features.map((f, idx) => (
-      <div
-        key={idx}
-        className={`relative p-6 rounded-2xl flex items-center justify-center flex-col 
-                   transform transition-all duration-500 ease-out
-                   hover:scale-105 hover:-translate-y-2 group`}
-        style={{
-          backgroundColor: f.icon === Plus ? "#FFA541" : "#383535",
-          height: "190px",
-        }}
-      >
-        {/* Icon Wrapper */}
-        <div
-          className="flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
-          style={{
-            backgroundColor: f.icon === Plus ? "transparent" : "#FFA541",
-            color: "white",
-            width: f.icon === Plus ? "64px" : "56px",
-            height: f.icon === Plus ? "64px" : "56px",
-            borderRadius: "0.75rem",
-          }}
-        >
-          <f.icon
-            size={f.icon === Plus ? 48 : 28}
-            className="transition-transform duration-500 group-hover:scale-125"
-          />
+        <h2 className="text-3xl font-bold text-center mb-8">Everything you need</h2>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {features.map((f, idx) => (
+            <div
+              key={idx}
+              className={`relative p-6 rounded-2xl flex items-center justify-center flex-col transform transition-all duration-500 ease-out hover:scale-105 hover:-translate-y-2 group`}
+              style={{
+                backgroundColor: f.icon === Plus ? "#FFA541" : "#383535",
+                height: "190px",
+              }}
+            >
+              {/* Icon Wrapper */}
+              <div
+                className="flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                style={{
+                  backgroundColor: f.icon === Plus ? "transparent" : "#FFA541",
+                  color: "white",
+                  width: f.icon === Plus ? "64px" : "56px",
+                  height: f.icon === Plus ? "64px" : "56px",
+                  borderRadius: "0.75rem",
+                }}
+              >
+                <f.icon size={f.icon === Plus ? 48 : 28} className="transition-transform duration-500 group-hover:scale-125" />
+              </div>
+
+              {/* Text */}
+              {f.icon !== Plus && (
+                <>
+                  <h3 className="font-semibold mt-4 text-white transition-colors duration-500 group-hover:text-[#FFA541]">
+                    {f.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 text-center transition-opacity duration-500 group-hover:opacity-90">
+                    {f.description}
+                  </p>
+                </>
+              )}
+            </div>
+          ))}
         </div>
-
-        {/* Text */}
-        {f.icon !== Plus && (
-          <>
-            <h3 className="font-semibold mt-4 text-white transition-colors duration-500 group-hover:text-[#FFA541]">
-              {f.title}
-            </h3>
-            <p className="text-sm text-gray-400 text-center transition-opacity duration-500 group-hover:opacity-90">
-              {f.description}
-            </p>
-          </>
-        )}
-      </div>
-    ))}
-  </div>
-</section>
-
+      </section>
 
       {/* Testimonials */}
-<section className="py-16 px-4" style={{ backgroundColor: "#383535" }}>
-  <h2 className="text-3xl font-bold text-center mb-8">Student Voices</h2>
-  <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-    {testimonials.map((t, i) => (
-      <div
-        key={i}
-        className="p-6 rounded-2xl group transition-transform duration-300 hover:scale-105"
-        style={{ backgroundColor: "#1A1A1A" }}
-      >
-        <p className="italic text-gray-300 mb-4">"{t.quote}"</p>
-        <p className="font-bold text-white transition-colors duration-300 group-hover:text-[#FFA541]">
-          {t.name}
-        </p>
-        <p className="text-sm text-gray-400">{t.course}</p>
-      </div>
-    ))}
-  </div>
-</section>
-
+      <section className="py-16 px-4" style={{ backgroundColor: "#383535" }}>
+        <h2 className="text-3xl font-bold text-center mb-8">Student Voices</h2>
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {testimonials.map((t, i) => (
+            <div
+              key={i}
+              className="p-6 rounded-2xl group transition-transform duration-300 hover:scale-105"
+              style={{ backgroundColor: "#1A1A1A" }}
+            >
+              <p className="italic text-gray-300 mb-4">"{t.quote}"</p>
+              <p className="font-bold text-white transition-colors duration-300 group-hover:text-[#FFA541]">{t.name}</p>
+              <p className="text-sm text-gray-400">{t.course}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Contact */}
       <section className="py-16 px-4 text-center">
@@ -163,14 +182,12 @@ const Index = () => {
       <section className="py-16 px-4 text-center" style={{ backgroundColor: "#FFA541", color: "black" }}>
         <h2 className="text-3xl font-bold mb-4">Ready to join your campus community?</h2>
         <p className="mb-4">Connect, explore, and grow with Troop.</p>
-<button
-  onClick={() => navigate("/register")}
-  className="px-6 py-3 rounded-full cursor-pointer font-semibold z-10 mb-4 
-             bg-black text-white transition-colors duration-300 
-             hover:bg-white hover:text-black"
->
-  Get Started
-</button>
+        <button
+          onClick={() => navigate("/register")}
+          className="px-6 py-3 rounded-full cursor-pointer font-semibold z-10 mb-4 bg-black text-white transition-colors duration-300 hover:bg-white hover:text-black"
+        >
+          Get Started
+        </button>
       </section>
 
       {/* Footer */}
