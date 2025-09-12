@@ -20,6 +20,7 @@
     "fs": "^0.0.1-security",
     "mongoose": "^8.15.1",
     "multer": "^2.0.2",
+    "node-cron": "^4.2.1",
     "pdfjs-dist": "^5.4.149"
   }
 }

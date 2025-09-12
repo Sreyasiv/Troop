@@ -7,10 +7,13 @@ import compaRoutes from "./routes/compaRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import { verifyToken } from "./middleware/verifyToken.js";
+import { startCronJobs } from "./cronjobs/cronJobs.js"; 
 
 
 
 dotenv.config();
+
+startCronJobs();
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -47,6 +50,8 @@ mongoose
 app.get("/", (req, res) => {
   res.json("SERVER is runningggg!!!!");
 });
+
+
 
 // ✅ API routes
 app.use("/api/posts", postRoutes);
