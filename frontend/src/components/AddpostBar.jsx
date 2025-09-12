@@ -10,6 +10,11 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
   const fileInputRef = useRef();
   const editorRef = useRef();
   const [community, setCommunity] = useState(defaultCommunity);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showLinkInput, setShowLinkInput] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const linkInputRef = useRef();
+  const [savedRange, setSavedRange] = useState(null);
 
   const openComposer = () => {
     if (editorRef.current) editorRef.current.innerHTML = "";
@@ -51,8 +56,60 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
     }
   };
 
+  // Add exec for link and remove format
   const exec = (cmd) => {
-    document.execCommand(cmd, false, null);
+    if (cmd === "createLink") {
+      // Save the current selection range
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        setSavedRange(selection.getRangeAt(0));
+      }
+      setShowLinkInput(true);
+      setTimeout(() => linkInputRef.current?.focus(), 100);
+    } else {
+      document.execCommand(cmd, false, null);
+      editorRef.current?.focus();
+    }
+  };
+
+  // Enhance links in editor: set target and rel, and style
+  const enhanceLinksInEditor = () => {
+    if (editorRef.current) {
+      const links = editorRef.current.querySelectorAll("a");
+      links.forEach(link => {
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noopener noreferrer");
+        link.classList.add("troop-link-style");
+      });
+    }
+  };
+
+  const handleAddLink = () => {
+    if (linkUrl && savedRange) {
+      // Restore the selection before creating the link
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(savedRange);
+      document.execCommand("createLink", false, linkUrl.startsWith("http") ? linkUrl : `https://${linkUrl}`);
+      // Only style the newly created link
+      if (editorRef.current) {
+        const links = editorRef.current.querySelectorAll("a");
+        if (links.length > 0) {
+          const anchor = links[links.length - 1];
+          anchor.setAttribute("target", "_blank");
+          anchor.setAttribute("rel", "noopener noreferrer");
+          anchor.classList.add("troop-link-style");
+        }
+      }
+    }
+    setShowLinkInput(false);
+    setLinkUrl("");
+    setSavedRange(null);
+    editorRef.current?.focus();
+  };
+  const handleCancelLink = () => {
+    setShowLinkInput(false);
+    setLinkUrl("");
     editorRef.current?.focus();
   };
 
@@ -203,26 +260,41 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
       {/* Modal overlay */}
       {open && (
         <div>
+          {/* Blurred overlay */}
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            className="fixed inset-0 z-40 backdrop-blur-md bg-black/10 transition-all duration-300"
             onClick={closeComposer}
           />
-          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg w-full max-w-2xl shadow-xl overflow-hidden">
-              <div className="flex items-center justify-between p-3 border-b">
-                <h3 className="text-lg font-semibold text-gray-800">Create Post</h3>
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-2 sm:p-4">
+            <div className="bg-[#232222] rounded-3xl w-full max-w-lg sm:max-w-xl md:max-w-2xl shadow-xl overflow-hidden border border-[#FFA541]/40" style={{boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.10)'}}>
+              <div className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 border-b border-[#383535] bg-[#181818]">
+                <h3 className="text-lg sm:text-xl font-bold text-white">Create Post</h3>
                 <div className="flex items-center gap-2">
-                  <select
-                    value={community}
-                    onChange={(e) => setCommunity(e.target.value)}
-                    className="border rounded px-2 py-1"
-                  >
-                    <option value="lounge">Lounge</option>
-                    <option value="learn">Learn</option>
-                    <option value="market-explore">Market-Explore</option>
-                    <option value="club-buzz">Club-Buzz</option>
-                  </select>
-
+                  {/* Custom Dropdown for Community */}
+                  <div className="relative" tabIndex={0}>
+                    <button
+                      type="button"
+                      onClick={() => setDropdownOpen((prev) => !prev)}
+                      className="flex items-center gap-2 bg-[#232222] border border-[#FFA541]/40 text-white rounded-lg px-3 py-1 text-sm focus:ring-2 focus:ring-[#FFA541] transition-all min-w-[110px] hover:border-[#FFA541]"
+                    >
+                      {community.charAt(0).toUpperCase() + community.slice(1).replace(/-/g, ' ')}
+                      <svg className="w-4 h-4 text-[#FFA541]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    {dropdownOpen && (
+                      <ul className="absolute top-full left-0 z-50 w-full bg-[#232222] border border-[#FFA541]/40 rounded-b-lg shadow-lg mt-1 animate-fadeIn">
+                        {["lounge", "learn", "market-explore", "club-buzz"].map((c) => (
+                          <li
+                            key={c}
+                            onClick={() => { setCommunity(c); setDropdownOpen(false); }}
+                            className={`px-4 py-2 text-sm cursor-pointer hover:bg-[#FFA541]/20 hover:text-[#FFA541] transition-colors ${community === c ? 'bg-[#FFA541]/10 text-[#FFA541]' : 'text-white'}`}
+                          >
+                            {c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, ' ')}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  {/* Attach */}
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -237,34 +309,119 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1 rounded bg-gray-100 border"
+                    className="px-3 py-1 rounded-lg bg-[#232222] border border-[#FFA541]/40 text-[#FFA541] text-sm font-semibold hover:bg-[#FFA541]/10 hover:text-[#FFA541] hover:border-[#FFA541] transition-colors"
                   >
                     Attach
                   </button>
                   <button
                     onClick={closeComposer}
-                    className="px-3 py-1 text-gray-600 hover:text-gray-900"
+                    className="px-3 py-1 text-gray-400 hover:text-[#FFA541] text-lg font-bold rounded-lg transition-colors"
                   >
                     ✕
                   </button>
                 </div>
               </div>
 
-              <div className="p-4">
-                <div className="mb-2 flex gap-2">
-                  <button onClick={() => exec("bold")} className="px-2 py-1 border rounded font-bold">B</button>
-                  <button onClick={() => exec("italic")} className="px-2 py-1 border rounded italic">I</button>
+              <div className="px-4 py-4 sm:px-6 sm:py-6 bg-[#232222]">
+                <div className="mb-3 flex gap-2 flex-wrap relative">
+                  {/* Formatting toolbar */}
+                  <button
+                    type="button"
+                    title="Bold"
+                    onClick={() => exec("bold")}
+                    className="w-8 h-8 flex items-center justify-center border border-[#FFA541]/40 rounded bg-[#232222] text-white hover:bg-[#FFA541]/20 hover:text-[#FFA541] transition-colors"
+                  >
+                    <span className="font-bold">B</span>
+                  </button>
+                  <button
+                    type="button"
+                    title="Italic"
+                    onClick={() => exec("italic")}
+                    className="w-8 h-8 flex items-center justify-center border border-[#FFA541]/40 rounded bg-[#232222] text-white italic hover:bg-[#FFA541]/20 hover:text-[#FFA541] transition-colors"
+                  >
+                    I
+                  </button>
+                  <button
+                    type="button"
+                    title="Underline"
+                    onClick={() => exec("underline")}
+                    className="w-8 h-8 flex items-center justify-center border border-[#FFA541]/40 rounded bg-[#232222] text-white underline hover:bg-[#FFA541]/20 hover:text-[#FFA541] transition-colors"
+                  >
+                    U
+                  </button>
+                  <button
+                    type="button"
+                    title="Add Link"
+                    onClick={() => exec("createLink")}
+                    className="w-8 h-8 flex items-center justify-center border border-[#FFA541]/40 rounded bg-[#232222] text-white hover:bg-[#FFA541]/20 hover:text-[#FFA541] transition-colors"
+                  >
+                    {/* Chain link icon */}
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 010 5.656l-3.656 3.656a4 4 0 01-5.656-5.656l3.656-3.656a4 4 0 015.656 0" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.172 13.828a4 4 0 010-5.656l3.656-3.656a4 4 0 015.656 5.656l-3.656 3.656a4 4 0 01-5.656 0" />
+                    </svg>
+                  </button>
+                  {/* Link input popup */}
+                  {showLinkInput && (
+                    <div className="absolute left-0 top-10 z-20 flex items-center gap-2 bg-[#181818] border border-[#FFA541]/40 rounded-lg shadow-lg px-3 py-2 mt-1" style={{minWidth:'220px'}}>
+                      <input
+                        ref={linkInputRef}
+                        type="text"
+                        value={linkUrl}
+                        onChange={(e) => setLinkUrl(e.target.value)}
+                        placeholder="Enter link URL"
+                        className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none text-sm"
+                      />
+                      <button
+                        onClick={handleAddLink}
+                        className="px-2 py-1 rounded bg-[#FFA541] text-[#232222] font-bold text-xs hover:bg-[#ffd699] transition-colors"
+                      >
+                        Add Link
+                      </button>
+                      <button
+                        onClick={handleCancelLink}
+                        className="px-2 py-1 rounded bg-[#232222] text-white text-xs border border-[#FFA541]/40 hover:bg-[#FFA541]/20 hover:text-[#FFA541] transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <div
                   ref={editorRef}
                   contentEditable
-                  className="min-h-[120px] p-3 border rounded bg-white text-black prose"
+                  className="min-h-[100px] sm:min-h-[120px] p-3 border border-[#383535] rounded-lg bg-[#181818] text-white prose max-h-60 overflow-y-auto focus:outline-none focus:ring-2 focus:ring-[#FFA541] transition-all text-sm sm:text-base"
+                  style={{fontSize: '1rem'}}
+                  onInput={enhanceLinksInEditor}
+                  onPaste={e => { setTimeout(enhanceLinksInEditor, 0); }}
+                  onClick={e => {
+                    // If a link is clicked, open in new tab
+                    const target = e.target;
+                    if (target.tagName === 'A' && target.href) {
+                      window.open(target.href, '_blank', 'noopener,noreferrer');
+                      e.preventDefault();
+                    }
+                  }}
                 />
+                {/* Custom link styles for editor */}
+                <style>{`
+                  .troop-link-style {
+                    color: #FFA541;
+                    text-decoration: underline;
+                    cursor: pointer;
+                    transition: color 0.2s;
+                  }
+                  .troop-link-style:hover {
+                    color: #ffd699;
+                    background: #23222233;
+                    text-decoration: underline;
+                  }
+                `}</style>
                 {files.length > 0 && (
                   <div className="mt-3 flex gap-2 overflow-x-auto p-2">
                     {files.map((f, i) => (
-                      <div key={i} className="text-sm text-gray-700 bg-gray-100 p-2 rounded">
+                      <div key={i} className="text-xs text-gray-200 bg-[#232222] p-2 rounded-lg border border-[#FFA541]/40">
                         {f.name}
                       </div>
                     ))}
@@ -272,18 +429,18 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
                 )}
               </div>
 
-              <div className="p-3 border-t flex items-center justify-between">
-                <div className="text-sm text-gray-500">
+              <div className="px-4 py-3 sm:px-6 sm:py-4 border-t border-[#383535] bg-[#181818] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="text-xs text-gray-400 mb-2 sm:mb-0">
                   {files.length > 0
                     ? `${files.length} file(s) attached`
                     : community === "learn"
                       ? "You can attach PDF / DOC / DOCX or images"
                       : "You can add images or videos"}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     onClick={closeComposer}
-                    className="px-4 py-2 rounded bg-gray-100"
+                    className="px-4 py-2 rounded-lg bg-[#232222] text-white border border-[#FFA541]/40 hover:bg-[#FFA541]/10 hover:text-[#FFA541] hover:border-[#FFA541] transition-colors w-1/2 sm:w-auto"
                     disabled={loading}
                   >
                     Cancel
@@ -291,7 +448,7 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
                   <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="px-4 py-2 rounded bg-orange-500 text-white disabled:opacity-50"
+                    className="px-4 py-2 rounded-lg bg-[#FFA541] text-[#232222] font-bold border border-[#FFA541] hover:bg-[#232222] hover:text-[#FFA541] transition-colors w-1/2 sm:w-auto disabled:opacity-50"
                   >
                     {loading ? "Posting..." : "Post"}
                   </button>
