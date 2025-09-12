@@ -8,6 +8,8 @@ import postRoutes from "./routes/postRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import { verifyToken } from "./middleware/verifyToken.js";
 import { startCronJobs } from "./cronjobs/cronJobs.js"; 
+import { limiter } from "./middleware/rateLimiter.js";
+
 
 
 
@@ -15,8 +17,12 @@ dotenv.config();
 
 startCronJobs();
 
+
+
 const app = express();
 const PORT = process.env.PORT || 8000;
+
+app.use(limiter);
 
 app.use(express.json());
 
