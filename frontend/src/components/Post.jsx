@@ -217,6 +217,26 @@ const Post = ({
     ? attachments.filter((a) => a && a.mimeType && docMimes.has(a.mimeType))
     : [];
 
+  // Add this effect to style links in post content
+  React.useEffect(() => {
+    const postDiv = document.getElementById('post-content-html');
+    if (postDiv) {
+      const links = postDiv.querySelectorAll('a');
+      links.forEach(link => {
+        link.classList.add('troop-link-style');
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+        // Remove all previous listeners by replacing the node
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
+        newLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.open(newLink.href, '_blank', 'noopener,noreferrer');
+        }, { once: false });
+      });
+    }
+  }, [cleanHtml]);
+
   return (
     <div className="bg-zinc-800 w-full max-w-[2050px] rounded-2xl overflow-visible p-4 sm:p-6 text-white shadow-lg">
       {/* Header */}
@@ -261,7 +281,21 @@ const Post = ({
 
       {/* Body */}
       <div className="mb-4 text-sm sm:text-base font-medium text-gray-100">
-        <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
+        <div id="post-content-html" dangerouslySetInnerHTML={{ __html: cleanHtml }} />
+        {/* Custom link styles for post content */}
+        <style>{`
+          .troop-link-style {
+            color: #FFA541;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.2s;
+          }
+          .troop-link-style:hover {
+            color: #ffd699;
+            background: #23222233;
+            text-decoration: underline;
+          }
+        `}</style>
       </div>
 
       {/* Media previews (images/videos) */}
