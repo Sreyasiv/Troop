@@ -57,7 +57,7 @@ export default function Learn() {
           />
         </div>
 
-        {/* Add Post Bar - defaultCommunity ensures composer opens with Learn */}
+
         <AddpostBar onPostCreated={handlePostCreated} defaultCommunity="learn" />
 
         {/* Posts List */}

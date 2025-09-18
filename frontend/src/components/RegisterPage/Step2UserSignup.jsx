@@ -1,4 +1,4 @@
-// frontend/src/components/RegisterPage/Step2UserSignup.js
+
 import React, { useState } from "react";
 import logo from "../../assets/logo.jpeg";
 import plane from "../../assets/plane.png";
@@ -13,7 +13,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const CreateAccount = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state?.email; // ✅ email from Step1
+  const email = location.state?.email; // 
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -113,10 +113,10 @@ const CreateAccount = () => {
             className="w-full p-3 sm:p-4 md:p-5 rounded-lg bg-[#D9D9D9] text-black border-none focus:outline-none text-lg sm:text-xl md:text-2xl"
           />
           {usernameAvailable === true && (
-            <p className="text-green-500 text-sm mt-1">✅ Available</p>
+            <p className="text-green-500 text-sm mt-1">Available</p>
           )}
           {usernameAvailable === false && (
-            <p className="text-red-500 text-sm mt-1">❌ Already taken</p>
+            <p className="text-red-500 text-sm mt-1">Already taken</p>
           )}
         </div>
 

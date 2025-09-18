@@ -1,4 +1,4 @@
-// backend/cloudinary/cloudinary.js
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -25,12 +25,12 @@ export const uploadToCloudinary = async (filePath, folder = "posts") => {
   try {
     const res = await cloudinary.v2.uploader.upload(filePath, {
       folder,
-      resource_type: "auto",   // 👈 accept images & videos
+      resource_type: "auto",   
       use_filename: true,
       unique_filename: false,
     });
 
-    // cleanup temp file
+
     fs.unlink(filePath, (err) => {
       if (err) console.warn("Temp file cleanup failed:", err);
     });

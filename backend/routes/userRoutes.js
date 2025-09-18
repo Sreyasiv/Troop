@@ -1,16 +1,14 @@
-// backend/routes/userRoutes.js
+
 import express from "express";
 import multer from "multer";
-import fs from "fs";
+
 import User from "../models/UserSchema.js";
 import { uploadToCloudinary } from "../cloudinary/cloudinary.js";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" }); // temp storage for multer
 
-// -------------------------
-// GET /api/users/check-username/:username
-// -------------------------
+
 router.get("/check-username/:username", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username });
@@ -21,10 +19,6 @@ router.get("/check-username/:username", async (req, res) => {
   }
 });
 
-// -------------------------
-// POST /api/users   (Create full user directly — optional)
-// body: { uid, email, username }
-// -------------------------
 router.post("/", async (req, res) => {
   try {
     const { uid, email, username } = req.body;
@@ -46,10 +40,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// -------------------------
-// POST /api/users/draft (Step 2 -> Firebase signup only)
-// body: { uid, email, username }
-// -------------------------
+
 router.post("/draft", async (req, res) => {
   try {
     const { uid, email, username } = req.body;
@@ -78,10 +69,7 @@ router.post("/draft", async (req, res) => {
   }
 });
 
-// -------------------------
-// PATCH /api/users/profile/:uid (Step 3 -> Profile setup - JSON variant)
-// body: { username, course, bio, profilePic, clubs }
-// -------------------------
+
 router.patch("/profile/:uid", async (req, res) => {
   try {
     const { uid } = req.params;
@@ -161,13 +149,6 @@ router.put("/setup/:uid", upload.single("profilePic"), async (req, res) => {
   }
 });
 
-
-
-// -------------------------
-// POST /api/users/upload-logo/:uid (multipart/form-data: file field name = "logo")
-// -------------------------
-// POST /api/users/upload-logo/:uid
-// POST /api/users/upload-logo/:uid
 router.post("/upload-logo/:uid", upload.single("logo"), async (req, res) => {
   try {
     const { uid } = req.params;
@@ -180,8 +161,6 @@ router.post("/upload-logo/:uid", upload.single("logo"), async (req, res) => {
     const user = await User.findOne({ uid });
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // If the request came from business flow, we expect client to set a flag or call /business afterwards.
-    // For general use, update business.logo if ownsBusiness true, else update profilePic.
     const updateObj = user.ownsBusiness ? { "business.logo": url } : { profilePic: url };
 
     const updatedUser = await User.findOneAndUpdate({ uid }, { $set: updateObj }, { new: true });
@@ -194,15 +173,6 @@ router.post("/upload-logo/:uid", upload.single("logo"), async (req, res) => {
 });
 
 
-
-// -------------------------
-// PATCH /api/users/business/:uid (Step 4 -> Business setup)
-// body: { name, tagline, logo, whatsapp, instagram }
-// -------------------------
-// PATCH /api/users/business/:uid
-// body: { name, tagline, logo, whatsapp, instagram }
-// PATCH /api/users/business/:uid
-// body: { name, tagline, logo, whatsapp, instagram }
 router.patch("/business/:uid", async (req, res) => {
   try {
     const { uid } = req.params;
@@ -225,16 +195,12 @@ router.patch("/business/:uid", async (req, res) => {
     return res.status(500).json({ error: "Could not update business" });
   }
 });
-// -------------------------
-// GET /api/users/progress/:uid
-// Returns normalized progress for a given firebase uid OR mongo _id
-// -------------------------
+
 router.get("/progress/:uid", async (req, res) => {
   try {
     const { uid } = req.params;
     let user = await User.findOne({ uid }).lean();
 
-    // fallback: maybe caller gave Mongo _id
     if (!user && /^[0-9a-fA-F]{24}$/.test(uid)) {
       user = await User.findById(uid).lean();
     }
@@ -253,10 +219,6 @@ router.get("/progress/:uid", async (req, res) => {
   }
 });
 
-// -------------------------
-// GET /api/users/by-email?email=...
-// Returns normalized progress by email
-// -------------------------
 router.get("/by-email", async (req, res) => {
   try {
     const { email } = req.query;

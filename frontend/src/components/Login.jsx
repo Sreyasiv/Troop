@@ -115,8 +115,6 @@ const LoginPage = () => {
     console.log("[fetchUserProgress] all endpoints tried, none returned user. lastResponse:", lastResponse);
     return null;
   };
-
-  // ---- redirect logic using normalized progress (sends to next incomplete step) ----
   const redirectBasedOnProgress = (progress, uidParam) => {
     const step = Number(progress?.step) || 0;
     const ownsBusiness = Boolean(progress?.ownsBusiness);
@@ -156,7 +154,7 @@ const LoginPage = () => {
   const handleLogin = async () => {
     setError("");
     setLoading(true);
-    didNavigateRef.current = false; // reset guard for this flow
+    didNavigateRef.current = false; 
     try {
       console.log("[handleLogin] attempting firebase signin for", email);
       const userCred = await signInWithEmailAndPassword(auth, email, password);
@@ -179,7 +177,6 @@ const LoginPage = () => {
       else if (msg.includes("auth/wrong-password")) setError("Incorrect password.");
       else if (msg.includes("auth/too-many-requests")) setError("Too many attempts. Try again later.");
       else {
-        // try the "email already in use" fallback which can happen during weird flows
         if (msg.includes("auth/email-already-in-use")) {
           try {
             const methods = await fetchSignInMethodsForEmail(auth, email);
@@ -202,7 +199,7 @@ const LoginPage = () => {
     }
   };
 
-  // ---- on-mount check for already authenticated user (auto-redirect to next incomplete step) ----
+  
   useEffect(() => {
     let mounted = true;
     const checkAndRedirect = async () => {
@@ -212,7 +209,7 @@ const LoginPage = () => {
       const emailFromAuth = current.email || email;
       console.log("[LoginPage] found currentUser on mount:", { uid, email: emailFromAuth });
 
-      // reset the guard so the auto-redirect can run once
+      
       didNavigateRef.current = false;
 
       const progress = await fetchUserProgress(uid, emailFromAuth);
@@ -231,7 +228,7 @@ const LoginPage = () => {
     return () => {
       mounted = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   // ---- UI ----

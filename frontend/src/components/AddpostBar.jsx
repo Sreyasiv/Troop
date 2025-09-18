@@ -1,4 +1,4 @@
-// src/components/AddpostBar.jsx
+
 import React, { useState, useRef } from "react";
 import { getAuth } from "firebase/auth";
 import DOMPurify from "dompurify";
@@ -56,10 +56,10 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
     }
   };
 
-  // Add exec for link and remove format
+
   const exec = (cmd) => {
     if (cmd === "createLink") {
-      // Save the current selection range
+
       const selection = window.getSelection();
       if (selection && selection.rangeCount > 0) {
         setSavedRange(selection.getRangeAt(0));
@@ -72,7 +72,7 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
     }
   };
 
-  // Enhance links in editor: set target and rel, and style
+
   const enhanceLinksInEditor = () => {
     if (editorRef.current) {
       const links = editorRef.current.querySelectorAll("a");
@@ -86,12 +86,12 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
 
   const handleAddLink = () => {
     if (linkUrl && savedRange) {
-      // Restore the selection before creating the link
+  
       const selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(savedRange);
       document.execCommand("createLink", false, linkUrl.startsWith("http") ? linkUrl : `https://${linkUrl}`);
-      // Only style the newly created link
+    
       if (editorRef.current) {
         const links = editorRef.current.querySelectorAll("a");
         if (links.length > 0) {
@@ -117,11 +117,10 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
     return editorRef.current?.innerHTML || "";
   };
 
-  // upload multipart to /api/posts/add (protected)
+
   const submitMultipart = async (token, html) => {
     const fd = new FormData();
 
-    // append files under "media" (backend supports reading files and community)
     if (files.length > 0) {
       files.forEach((file) => fd.append("media", file));
     }
@@ -134,10 +133,10 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
       fd.append("summary", plain.slice(0, 160));
     }
 
-    // DEBUG: log FormData entries so you can see exactly what's being sent
+
     try {
       for (const pair of fd.entries()) {
-        // For files, pair[1] will be a File object; log its name for clarity
+
         if (pair[1] && pair[1].name) {
           console.log("FormData entry:", pair[0], pair[1].name);
         } else {
@@ -163,12 +162,8 @@ export default function AddpostBar({ onPostCreated, defaultCommunity = "lounge" 
     return res.json();
   };
 
-  // submit JSON content to /api/posts (protected)
   const submitJson = async (token, html) => {
     const clean = DOMPurify.sanitize(html || "");
-
-    // DEBUG: log JSON payload that will be sent
-    console.log("JSON payload for /api/posts:", { contentHtmlPreview: clean.replace(/<[^>]*>?/gm, "").slice(0, 120), community });
 
     const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/posts`, {
       method: "POST",

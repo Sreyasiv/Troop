@@ -8,18 +8,17 @@ import axios from 'axios';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Put your PDF inside /public so Render includes it
+
 const pdfPath = path.join(process.cwd(), 'public', 'VISTAS.pdf');
 
 const router = express.Router();
 
 let docText = '';
 
-// 🔹 Load and parse PDF once at startup
 export async function loadPdf() {
   try {
-    console.log("📄 Looking for PDF at:", pdfPath);
-    console.log("✅ Exists?", fs.existsSync(pdfPath));
+    console.log(" Looking for PDF at:", pdfPath);
+    console.log(" Exists?", fs.existsSync(pdfPath));
 
     if (!fs.existsSync(pdfPath)) throw new Error('PDF file missing');
 
@@ -35,21 +34,21 @@ export async function loadPdf() {
     }
 
     docText = text;
-    console.log('✅ PDF loaded and parsed into memory');
+    console.log(' PDF loaded and parsed into memory');
   } catch (err) {
-    console.error('❌ Error parsing PDF:', err.message);
+    console.error(' Error parsing PDF:', err.message);
   }
 }
 
-// Load immediately at startup
+
 await loadPdf();
 
-// 🔹 Chat endpoint
+
 router.post('/ask', async (req, res) => {
   const { question } = req.body;
 
   if (!docText) {
-    console.error("❌ PDF text not ready yet");
+    console.error(" PDF text not ready yet");
     return res.status(500).json({ error: 'Document not ready yet' });
   }
 
@@ -88,7 +87,7 @@ ${docText}`
     res.json({ answer });
   } catch (err) {
     console.error(
-      "❌ Error generating answer:",
+      " Error generating answer:",
       err.response?.data || err.message || err
     );
     res.status(500).json({ error: 'Failed to generate answer' });

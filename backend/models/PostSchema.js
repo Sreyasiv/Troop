@@ -1,4 +1,4 @@
-// backend/models/Post.js
+
 import mongoose from "mongoose";
 
 const mediaSchema = new mongoose.Schema({
@@ -15,10 +15,10 @@ const attachmentSchema = new mongoose.Schema({
 }, { _id: false });
 
 const postSchema = new mongoose.Schema({
-  userId: { type: String, required: true },       // firebase uid
-  contentHtml: { type: String, default: "" },     // rich HTML from editor
-  media: { type: [mediaSchema], default: [] },    // images/videos (for lounge/market-explore)
-  attachments: { type: [attachmentSchema], default: [] }, // files (for learn)
+  userId: { type: String, required: true },       // Firebase UID
+  contentHtml: { type: String, default: "" },     
+  media: { type: [mediaSchema], default: [] },   
+  attachments: { type: [attachmentSchema], default: [] },
   community: { type: String, enum: ["lounge","learn","market-explore","club-buzz"], default: "lounge" },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });

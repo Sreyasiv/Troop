@@ -1,4 +1,4 @@
-// frontend/src/components/RegisterPage/BusinessSetup.jsx
+
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.jpeg";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -9,14 +9,13 @@ const BusinessSetup = () => {
   const location = useLocation();
   const [name, setName] = useState("");
   const [tagline, setTagline] = useState("");
-  const [logoFile, setLogoFile] = useState(null); // File object
+  const [logoFile, setLogoFile] = useState(null); 
   const [logoPreview, setLogoPreview] = useState(null);
   const [whatsapp, setWhatsapp] = useState("");
   const [instagram, setInstagram] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // If previous step passed uid via state, prefer it, else use auth.currentUser
   const uidFromState = location.state?.uid;
   const uid = uidFromState || (auth.currentUser && auth.currentUser.uid);
 
@@ -45,7 +44,6 @@ const BusinessSetup = () => {
     try {
       let logoUrl = "";
 
-      // 1) If user selected a file, upload it first
       if (logoFile) {
         const fd = new FormData();
         fd.append("logo", logoFile);
@@ -67,7 +65,7 @@ const BusinessSetup = () => {
         logoUrl = uploadData.url;
       }
 
-      // 2) Send business details (include logoUrl if present)
+
       const patchRes = await fetch(
         `${import.meta.env.VITE_API_URL}/api/users/business/${uid}`,
         {
@@ -91,7 +89,7 @@ const BusinessSetup = () => {
       const data = await patchRes.json();
       console.log("Business saved:", data);
 
-      // Navigate to lounge/dashboard
+
       navigate("/lounge");
     } catch (err) {
       console.error("Business setup error:", err);
@@ -112,7 +110,7 @@ const BusinessSetup = () => {
       </div>
 
       <div className="bg-[#2D2B2B] px-6 sm:px-8 md:px-10 py-6 sm:py-8 md:py-10 rounded-3xl shadow-lg w-full max-w-lg md:max-w-2xl flex flex-col gap-6 relative z-20">
-        {/* Business Name */}
+
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">
             Name of your Business <span className="text-red-500">*</span>
@@ -126,7 +124,7 @@ const BusinessSetup = () => {
           />
         </div>
 
-        {/* Tagline */}
+
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">
             Add a Tagline
@@ -140,7 +138,7 @@ const BusinessSetup = () => {
           />
         </div>
 
-        {/* Logo Upload */}
+
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">
             Upload your Business Logo
@@ -191,7 +189,7 @@ const BusinessSetup = () => {
           </div>
         </div>
 
-        {/* Whatsapp Business */}
+
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">Whatsapp Business</label>
           <input
@@ -203,7 +201,7 @@ const BusinessSetup = () => {
           />
         </div>
 
-        {/* Instagram Page */}
+
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">Instagram Page Link</label>
           <input
@@ -215,7 +213,7 @@ const BusinessSetup = () => {
           />
         </div>
 
-        {/* Submit Button */}
+
         <button
           onClick={handleSubmit}
           disabled={loading}

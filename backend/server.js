@@ -10,14 +10,9 @@ import { verifyToken } from "./middleware/verifyToken.js";
 import { startCronJobs } from "./cronjobs/cronJobs.js"; 
 import { limiter } from "./middleware/rateLimiter.js";
 
-
-
-
 dotenv.config();
 
 startCronJobs();
-
-
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -26,11 +21,11 @@ app.use(limiter);
 
 app.use(express.json());
 
-// ✅ CORS setup
+//CORS setup
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://thetroops.netlify.app", // deployed frontend
+  "https://thetroops.netlify.app", 
 ];
 
 app.use(
@@ -46,20 +41,20 @@ app.use(
     credentials: true,
   })
 );
-// ✅ MongoDB connection
+//  MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ DB connected"))
-  .catch((err) => console.error("❌ Error connecting to DB:", err));
+  .then(() => console.log("DB connected"))
+  .catch((err) => console.error("Error connecting to DB:", err));
 
-// ✅ Root route
+//Root route
 app.get("/", (req, res) => {
   res.json("SERVER is runningggg!!!!");
 });
 
 
 
-// ✅ API routes
+// API routes
 app.use("/api/posts", postRoutes);
 app.use("/compa", compaRoutes);
 app.use("/api/users", userRoutes);
@@ -70,7 +65,7 @@ app.get("/token/protected-route", verifyToken, (req, res) => {
   res.json({ ok: true, uid: req.user.uid });
 });
 
-// ✅ Start server
+//Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

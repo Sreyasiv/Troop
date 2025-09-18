@@ -1,5 +1,4 @@
 import cron from "node-cron";
-import fetch from "node-fetch"; // skip this line if Node 18+
 
 export function startCronJobs() {
   // Schedule: every 30 minutes

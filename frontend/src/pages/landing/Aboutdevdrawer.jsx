@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { X, Linkedin, Github,MailOpen, Wifi } from "lucide-react";
 
-// This is a drop-in replacement for the AboutDev drawer in LandingPage.jsx.
-// Usage: <AboutDevDrawer open={open} onClose={() => setOpen(false)} devPhotoSrc={devPhotoSrc} />
+
 
 export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
   const fallbackAvatar =
@@ -13,7 +12,7 @@ export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
 
   const drawerRef = useRef(null);
 
-  // lock scroll + handle Escape key + focus
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -157,7 +156,7 @@ export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
         </div>
 
         <div className="mt-auto pt-6 border-t border-white/10 text-xs text-gray-400">
-          <p>Buit with ❤️ by Sreya</p>
+          <p>Buit with 🤍 by Sreya</p>
         </div>
       </aside>
     </div>

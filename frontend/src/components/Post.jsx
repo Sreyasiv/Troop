@@ -1,13 +1,10 @@
-// src/components/Post.jsx
+
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import DOMPurify from "dompurify";
 import { ThumbsUp, X } from "lucide-react";
 
-/**
- * Ensures there's a root element for portals and returns it.
- * Creates <div id="__post_lightbox_root"> under document.body if missing.
- */
+
 function getOrCreateLightboxRoot() {
   if (typeof document === "undefined") return null;
   let root = document.getElementById("__post_lightbox_root");
@@ -19,10 +16,7 @@ function getOrCreateLightboxRoot() {
   return root;
 }
 
-/**
- * Detect ancestors that can "trap" fixed-positioned elements.
- * Logs a clear console warning listing the first few problematic ancestors.
- */
+
 function detectTrappingAncestors(el) {
   if (!el) return null;
   const bad = [];
@@ -53,15 +47,12 @@ function detectTrappingAncestors(el) {
   return bad;
 }
 
-/**
- * Portal-based tailwind + inline style lightbox.
- * Inline styles used for maxWidth/maxHeight so they can't be overridden by layout CSS.
- */
+
 function LightboxPortal({ src, alt = "Image", onClose }) {
   const root = getOrCreateLightboxRoot();
 
   useLayoutEffect(() => {
-    // Detect problematic ancestors of the root where Post might be mounted
+    
     const problematic = detectTrappingAncestors(document.querySelector("#root") || document.body);
     if (problematic && problematic.length > 0) {
       console.warn(
@@ -89,8 +80,6 @@ function LightboxPortal({ src, alt = "Image", onClose }) {
   }, [onClose]);
 
   if (!root) return null;
-
-  // Inline sizing override (very important): ensures we use viewport for sizing.
   const containerStyle = {
     position: "fixed",
     inset: 0,
@@ -102,7 +91,6 @@ function LightboxPortal({ src, alt = "Image", onClose }) {
     padding: "32px",
   };
 
-  // Use calc viewport sizes so image never overflows and is never cropped
   const wrapperStyle = {
     position: "relative",
     maxWidth: "calc(100vw - 64px)",
@@ -123,7 +111,7 @@ function LightboxPortal({ src, alt = "Image", onClose }) {
     display: "block",
   };
 
-  // Render portal
+
   return createPortal(
     <div
       onClick={onClose}
@@ -167,7 +155,7 @@ const Post = ({
   hashtags = [],
   images = [],
   media = [],
-  attachments = [], // new prop (array of {url, filename, mimeType, size})
+  attachments = [], 
   createdAt,
 }) => {
   const [liked, setLiked] = useState(false);
@@ -185,7 +173,7 @@ const Post = ({
       ? images.map((url) => ({ url, type: "image", alt: "" }))
       : [];
 
-  // SHOW DATE + TIME (example: "Sep 11, 2025, 4:23 PM")
+
   const formattedDateTime = createdAt
     ? new Date(createdAt).toLocaleString("en-US", {
         year: "numeric",
@@ -196,17 +184,17 @@ const Post = ({
       })
     : "";
 
-  // ISO timestamp for precise copy (shown as tooltip)
+
   const isoTimestamp = createdAt ? new Date(createdAt).toISOString() : "";
 
-  // Defensive: log if portal root missing when opening
+
   useEffect(() => {
     if (lightboxUrl && !document.getElementById("__post_lightbox_root")) {
       console.info("Creating lightbox root in document.body");
     }
   }, [lightboxUrl]);
 
-  // Helper: filter attachments to show only non-image docs (pdf/doc/docx)
+
   const docMimes = new Set([
     "application/pdf",
     "application/msword",
@@ -217,7 +205,7 @@ const Post = ({
     ? attachments.filter((a) => a && a.mimeType && docMimes.has(a.mimeType))
     : [];
 
-  // Add this effect to style links in post content
+
   React.useEffect(() => {
     const postDiv = document.getElementById('post-content-html');
     if (postDiv) {
@@ -257,7 +245,6 @@ const Post = ({
 
         <div className="flex flex-col items-end gap-1">
           {formattedDateTime && (
-            // show formatted date+time; hover reveals ISO timestamp for copy
             <p
               className="text-xs sm:text-sm text-gray-400"
               title={isoTimestamp}
@@ -298,7 +285,6 @@ const Post = ({
         `}</style>
       </div>
 
-      {/* Media previews (images/videos) */}
       {unifiedMedia.length > 0 && (
         <div
           className={`grid gap-4 ${
@@ -320,7 +306,7 @@ const Post = ({
                   alt={m.alt || `Post image ${i + 1}`}
                   onClick={() => setLightboxUrl(m.url)}
                   className="w-full rounded-xl cursor-pointer object-contain block"
-                  // keep preview height limited so feed stays tidy. Increase if needed.
+      
                   style={{ maxHeight: 520 }}
                 />
               </div>
@@ -329,7 +315,6 @@ const Post = ({
         </div>
       )}
 
-      {/* Attachments (PDF / DOC / DOCX) - simple list, no thumbnails */}
       {docAttachments.length > 0 && (
         <div className="mt-4 p-3 bg-gray-900 rounded-md border border-gray-800">
           <p className="text-sm text-gray-300 mb-2 font-semibold">Attachments</p>

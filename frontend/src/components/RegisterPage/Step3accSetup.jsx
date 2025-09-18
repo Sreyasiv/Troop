@@ -12,7 +12,7 @@ const Setup = () => {
   const [profilePicFile, setProfilePicFile] = useState(null); // File object
   const [profilePicPreview, setProfilePicPreview] = useState(null); // preview URL
   const [bio, setBio] = useState("");
-  const [ownsBusiness, setOwnsBusiness] = useState(""); // "yes" / "no"
+  const [ownsBusiness, setOwnsBusiness] = useState(""); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +31,7 @@ const Setup = () => {
     "CodeForge-(Coding)",
   ];
 
-  // create preview and clean up previous URL
+
   useEffect(() => {
     if (!profilePicFile) {
       setProfilePicPreview(null);
@@ -48,12 +48,11 @@ const Setup = () => {
     setSelectedClubs((prev) => (prev.includes(club) ? prev.filter((c) => c !== club) : [...prev, club]));
   };
 
-  // delete profile pic helper
+
   const deleteProfilePic = () => {
     if (profilePicPreview) URL.revokeObjectURL(profilePicPreview);
     setProfilePicFile(null);
     setProfilePicPreview(null);
-    // also clear the input element if you want (handled by key change or form reset)
   };
 
   const handleNext = async () => {
@@ -95,7 +94,6 @@ const Setup = () => {
       const data = await res.json();
       console.log("Setup saved:", data);
 
-      // If backend hints next route, use it. Else use ownsBusiness flag.
       if (data.next === "business" || ownsBusiness === "yes") {
         navigate("/business-setup", { state: { uid: user.uid } });
       } else {
@@ -120,7 +118,6 @@ const Setup = () => {
       </div>
 
       <div className="bg-[#2D2B2B] px-6 sm:px-8 md:px-10 py-6 sm:py-8 md:py-10 rounded-3xl shadow-lg w-full max-w-lg md:max-w-2xl flex flex-col gap-5 relative z-20 mt-6 sm:mt-0">
-        {/* Course Dropdown */}
         <div className="relative w-full" onMouseLeave={() => setDropdownOpen(false)}>
           <button
             type="button"
@@ -222,7 +219,6 @@ const Setup = () => {
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
-                  // revoke previous preview (cleanup handled by effect but revoke here to be safe)
                   if (profilePicPreview) URL.revokeObjectURL(profilePicPreview);
                   setProfilePicFile(file);
                 }}

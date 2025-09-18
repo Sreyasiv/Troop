@@ -1,4 +1,4 @@
-// frontend/src/components/RegisterPage/RegisterPage.jsx
+
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.jpeg";
 import plane from "../../assets/plane.png";
@@ -53,7 +53,6 @@ const RegisterPage = () => {
     return () => { mounted = false; };
   }, [authUser]);
 
-  // decide the correct next route based on profile fields
   const getNextRoute = (userProfile) => {
     if (!userProfile) return "/account-setup";
     const { isSetupComplete, accountSetupComplete, businessSetupComplete, ownsBusiness } = userProfile || {};
@@ -62,8 +61,6 @@ const RegisterPage = () => {
     if (!isSetupComplete) return "/create-account";
     return "/lounge";
   };
-
-  // NOTE: auto-redirect removed. navigation only happens when user clicks the banner button.
 
   const checkEmail = async (candidateEmail) => {
     setEmailTaken(false);
@@ -142,7 +139,7 @@ const RegisterPage = () => {
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">Create an account</h2>
       </div>
 
-      {/* If already signed in, show banner with actions (manual navigation only) */}
+      
       {authUser && (
         <div className="mb-4 w-full max-w-lg md:max-w-2xl bg-[#2b2b2b] border border-yellow-500 p-4 rounded-xl text-left z-20">
           <div className="flex items-start justify-between">

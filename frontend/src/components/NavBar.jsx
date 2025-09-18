@@ -1,4 +1,4 @@
-// src/components/NavBar.jsx
+
 import React from "react";
 import troopLogo from "../assets/logomain.png"; 
 import { Link } from "react-router-dom"; 

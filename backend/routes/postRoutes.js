@@ -11,7 +11,7 @@ import { verifyToken } from "../middleware/verifyToken.js";
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 
-// GET /api/posts?community=...
+
 router.get("/", async (req, res) => {
   try {
     const q = req.query.community;
@@ -76,7 +76,7 @@ router.get("/", async (req, res) => {
 // POST /api/posts  (JSON) - stores community for text-only posts
 router.post("/", verifyToken, async (req, res) => {
   try {
-    // debug log (optional) - remove when stable
+   
     console.log(">>> SERVER: POST /api/posts body:", JSON.stringify(req.body));
 
     const { contentHtml, media, community: rawCommunity } = req.body;
@@ -97,7 +97,7 @@ router.post("/", verifyToken, async (req, res) => {
       community,
     });
 
-    // attach user for convenience
+    
     const user = await User.findOne({
       $or: [
         { uid: req.user.uid },
@@ -133,14 +133,14 @@ router.post(
     try {
       const { contentHtml: incomingHtml, title, description, community: rawCommunity } = req.body;
 
-      // normalize community
+      
       const community = String((rawCommunity || "lounge")).toLowerCase();
       const allowedCommunities = ["lounge", "learn", "market-explore","club-buzz"];
       if (!allowedCommunities.includes(community)) {
         return res.status(400).json({ error: "Invalid community" });
       }
 
-      // Normalize contentHtml
+      
       let contentHtml = incomingHtml && String(incomingHtml).trim()
         ? String(incomingHtml).trim()
         : "";
