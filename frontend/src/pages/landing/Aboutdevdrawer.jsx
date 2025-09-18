@@ -156,7 +156,7 @@ export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
         </div>
 
         <div className="mt-auto pt-6 border-t border-white/10 text-xs text-gray-400">
-          <p>Buit with 🤍 by Sreya</p>
+          <p>Built with 🤍 by Sreya</p>
         </div>
       </aside>
     </div>
