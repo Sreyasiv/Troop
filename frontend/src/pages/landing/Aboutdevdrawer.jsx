@@ -56,7 +56,7 @@ export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-2xl font-extrabold tracking-tight">Hi there!</h3>
-            <p className="text-sm text-gray-300 mt-1">Sreya Sivakumar — MERN • AI • Campus tools</p>
+            <h4 className="text-sm text-gray-300 font-bold mt-1">Developer of Troop</h4>
           </div>
 
           <button
