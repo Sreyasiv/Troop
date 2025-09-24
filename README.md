@@ -1,38 +1,32 @@
-# Troop- A Community Platform
-
-## 🚀 About Troop
-
-Troop is a dynamic college community platform designed to connect students, support freelancers and businesses, share learning resources, and provide event updates. It is an all-in-one hub for collaboration, networking, and academic growth.
-
-## ✨ Features
-
-📌 Community Boards – Discuss topics, ask questions, and share insights.
-
-👥 Student Networking – Connect with peers, find study partners, and collaborate.
-
-💼 Freelance & Business Support – Promote student-led businesses.
-
-📚 Learning Resources – Access and share study materials, tutorials, and tips.
-
-📅 Event Hub – Stay updated with campus events, workshops, and meetups.
-
-🤖 Campus Guide Bot – A smart bot to help navigate through the campus.
-
-🛍️ Thrift Store – Buy and sell pre-owned items within the student community.
-
-## 🎯 Goals
-
-- Create an intuitive and interactive community for students.
-
-- Ensure seamless communication and collaboration.
-
-- Offer a professional yet engaging platform for student businesses.
 
 
-
-## Frontend Deployment
-https://thetroops.netlify.app/
+![59978C09-750E-4A41-9C43-725B471EEA7F](https://github.com/user-attachments/assets/f4a14129-aed4-46c8-9767-2add1118dffd)
 
 
-## Backend Deployment
-https://s75-sreya-capstone-troop-1.onrender.com
+# 🚀 Troop – Your Campus, Your Crew  
+
+**Troop** is a dynamic **college community platform** built to bring students together.  
+From finding events and resources to supporting freelancers and businesses, Troop is your **all-in-one hub** for collaboration, networking, and growth.  
+
+---
+
+## ✨ What You Can Do with Troop  
+
+- 📝 **Community Boards** – Start discussions, ask questions, and share insights.  
+- 🤝 **Student Networking** – Connect with peers, find study partners, and collaborate.  
+- 💼 **Freelance & Business Support** – Showcase and promote student-led ventures.  
+- 📚 **Learning Resources** – Share notes, tutorials, and study tips.  
+- 📅 **Event Hub** – Stay on top of workshops, fests, and campus events.  
+- 🤖 **Campus Guide Bot** – Navigate your college with AI assistance.  
+- 🛍️ **Thrift Store** – Buy & sell pre-loved items within the student circle.  
+
+---
+
+## 🌐 Deployments  
+
+- **Frontend**: [Troop on Netlify](https://thetroops.netlify.app/)  
+- **Backend**: [Troop API on Render](https://s75-sreya-capstone-troop-1.onrender.com)  
+
+---
+
+🔥 *Troop isn’t just an app — it’s your campus, organized.*  
