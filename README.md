@@ -3,7 +3,7 @@
 ![59978C09-750E-4A41-9C43-725B471EEA7F](https://github.com/user-attachments/assets/f4a14129-aed4-46c8-9767-2add1118dffd)
 
 
-# 🚀 Troop – Your Campus, Your Crew  
+## 🚀 Troop – Your Campus, Your Crew  
 
 **Troop** is a dynamic **college community platform** built to bring students together.  
 From finding events and resources to supporting freelancers and businesses, Troop is your **all-in-one hub** for collaboration, networking, and growth.  
