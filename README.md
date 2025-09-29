@@ -22,6 +22,37 @@ From finding events and resources to supporting freelancers and businesses, Troo
 
 ---
 
+## 🛠️ Tech Stack  
+
+### 🌐 Frontend  
+![React](https://img.shields.io/badge/React-000000?style=for-the-badge&logo=react&logoColor=61DAFB)
+![React Router](https://img.shields.io/badge/React_Router-FF6C37?style=for-the-badge&logo=react-router&logoColor=white)
+![Lucide React](https://img.shields.io/badge/Lucide_React-808080?style=for-the-badge&logo=lucide&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-F5A623?style=for-the-badge&logo=framer&logoColor=white)  
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-FFB347?style=for-the-badge&logo=tailwind-css&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-333333?style=for-the-badge&logo=vite&logoColor=FFB347)
+![DOMPurify](https://img.shields.io/badge/DOMPurify-808080?style=for-the-badge&logo=javascript&logoColor=F5A623)
+![Firebase](https://img.shields.io/badge/Firebase-F5A623?style=for-the-badge&logo=firebase&logoColor=black)
+
+---
+
+### 🖥️ Backend  
+![Node.js](https://img.shields.io/badge/Node.js-333333?style=for-the-badge&logo=node.js&logoColor=F5A623)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![Express Rate Limit](https://img.shields.io/badge/Express--Rate--Limit-FF6C37?style=for-the-badge&logo=express&logoColor=white)  
+![MongoDB](https://img.shields.io/badge/MongoDB-000000?style=for-the-badge&logo=mongodb&logoColor=FFB347)  
+![Cloudinary](https://img.shields.io/badge/Cloudinary-333333?style=for-the-badge&logo=cloudinary&logoColor=F5A623)
+![Multer](https://img.shields.io/badge/Multer-FF6C37?style=for-the-badge&logo=npm&logoColor=white)
+![Node-Cron](https://img.shields.io/badge/Node--Cron-808080?style=for-the-badge&logo=clockify&logoColor=F5A623)
+![Firebase Admin](https://img.shields.io/badge/Firebase_Admin-F5A623?style=for-the-badge&logo=firebase&logoColor=000000)  
+![PDF.js](https://img.shields.io/badge/PDF.js-000000?style=for-the-badge&logo=adobe-acrobat-reader&logoColor=FF6C37)
+![Vitest](https://img.shields.io/badge/Vitest-000000?style=for-the-badge&logo=vitest&logoColor=FF6C37)
+![OpenRouter](https://img.shields.io/badge/OpenRouter-000000?style=for-the-badge&logo=openai&logoColor=F5A623)
+![GPT-4.0-mini](https://img.shields.io/badge/GPT--4.0--mini-808080?style=for-the-badge&logo=openai&logoColor=FFB347)
+
+
+---
+
 ## 🌐 Deployments  
 
 - **Frontend**: [Troop on Netlify](https://thetroops.netlify.app/)  
