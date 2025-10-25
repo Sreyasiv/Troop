@@ -16,6 +16,7 @@
     "dompurify": "^3.2.6",
     "firebase": "^12.2.1",
     "framer-motion": "^12.16.0",
+    "gsap": "^3.13.0",
     "lucide-react": "^0.487.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
