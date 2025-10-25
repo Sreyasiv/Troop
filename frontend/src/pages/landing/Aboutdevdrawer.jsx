@@ -35,7 +35,6 @@ export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
       aria-hidden={!open}
       className={`fixed inset-0 z-[100000] pointer-events-none`}>
 
-      {/* Backdrop */}
       <div
         onClick={onClose}
         className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${
@@ -51,7 +50,7 @@ export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
         tabIndex={-1}
         className={`absolute top-0 right-0 h-full text-white transform transition-transform duration-400 ${
           open ? "translate-x-0 pointer-events-auto" : "translate-x-full pointer-events-none"
-        } w-full md:w-[420px] flex flex-col overflow-y-auto p-6 bg-gradient-to-b from-[#0b1220] via-[#0f1720] to-[#0b0b0b] shadow-2xl`}
+        } w-full md:w-[420px] flex flex-col overflow-y-auto p-6 bg-[#0b0b0b] shadow-2xl`}
       >
         <div className="flex items-start justify-between">
           <div>
@@ -110,25 +109,14 @@ export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
           </div>
         </div>
 
-        {/* Bio + stats */}
         <div className="mt-6 space-y-4">
           <p className="text-sm text-gray-200 leading-relaxed">
             Troop was built with the idea of making campus life connected, accessible,less chaotic and obviously more fun.
-            Put in way too much grind for this,if it breaks, just pretend it's a
-            feature. 
-          </p>
-
-          <p className="text-sm text-gray-200 leading-relaxed">
-            Got ideas? Drop me a mail,I respond quicker than Vel's Wi-Fi..
+             
           </p>
 
           
         </div>
-
-        {/* Skills / mini portfolio */}
-       
-
-        {/* CTA area */}
         <div className="mt-6">
           <h5 className="text-sm font-semibold text-gray-300">Support / contact</h5>
           <div className="mt-3 flex flex-col gap-3">
@@ -156,7 +144,7 @@ export default function AboutDevDrawer({ open, onClose, devPhotoSrc }) {
         </div>
 
         <div className="mt-auto pt-6 border-t border-white/10 text-xs text-gray-400">
-          <p>Built with 🤍 by Sreya</p>
+        <p>If you find this cool! Do checkout my other projects!</p>
         </div>
       </aside>
     </div>
