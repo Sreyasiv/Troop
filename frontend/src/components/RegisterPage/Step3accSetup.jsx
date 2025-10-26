@@ -9,10 +9,10 @@ const Setup = () => {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedClubs, setSelectedClubs] = useState([]);
-  const [profilePicFile, setProfilePicFile] = useState(null); // File object
-  const [profilePicPreview, setProfilePicPreview] = useState(null); // preview URL
+  const [profilePicFile, setProfilePicFile] = useState(null); 
+  const [profilePicPreview, setProfilePicPreview] = useState(null); 
   const [bio, setBio] = useState("");
-  const [ownsBusiness, setOwnsBusiness] = useState(""); 
+  const [ownsBusiness, setOwnsBusiness] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +31,6 @@ const Setup = () => {
     "CodeForge-(Coding)",
   ];
 
-
   useEffect(() => {
     if (!profilePicFile) {
       setProfilePicPreview(null);
@@ -45,9 +44,10 @@ const Setup = () => {
   }, [profilePicFile]);
 
   const toggleClub = (club) => {
-    setSelectedClubs((prev) => (prev.includes(club) ? prev.filter((c) => c !== club) : [...prev, club]));
+    setSelectedClubs((prev) =>
+      prev.includes(club) ? prev.filter((c) => c !== club) : [...prev, club]
+    );
   };
-
 
   const deleteProfilePic = () => {
     if (profilePicPreview) URL.revokeObjectURL(profilePicPreview);
@@ -94,8 +94,9 @@ const Setup = () => {
       const data = await res.json();
       console.log("Setup saved:", data);
 
+      
       if (data.next === "business" || ownsBusiness === "yes") {
-        navigate("/business-setup", { state: { uid: user.uid } });
+        navigate("/business-setup", { state: { uid: user.uid, from: "signup" } });
       } else {
         navigate("/lounge");
       }
