@@ -9,8 +9,8 @@ const Setup = () => {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedClubs, setSelectedClubs] = useState([]);
-  const [profilePicFile, setProfilePicFile] = useState(null); 
-  const [profilePicPreview, setProfilePicPreview] = useState(null); 
+  const [profilePicFile, setProfilePicFile] = useState(null); // File object
+  const [profilePicPreview, setProfilePicPreview] = useState(null); // preview URL
   const [bio, setBio] = useState("");
   const [ownsBusiness, setOwnsBusiness] = useState("");
   const [error, setError] = useState("");
@@ -94,7 +94,7 @@ const Setup = () => {
       const data = await res.json();
       console.log("Setup saved:", data);
 
-      
+      // IMPORTANT: pass 'from: "signup"' when navigating to BusinessSetup in signup flow
       if (data.next === "business" || ownsBusiness === "yes") {
         navigate("/business-setup", { state: { uid: user.uid, from: "signup" } });
       } else {
