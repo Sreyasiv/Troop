@@ -1,6 +1,7 @@
 [build]
+  base    = "frontend"
   command = "npm run build"
-  publish = "build"  # or "dist" if you're using Vite
+  publish = "frontend/dist"
 
 [[redirects]]
   from = "/*"
