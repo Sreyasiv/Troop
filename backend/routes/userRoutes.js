@@ -5,13 +5,12 @@ import multer from "multer";
 import User from "../models/UserSchema.js";
 import { uploadToCloudinary } from "../cloudinary/cloudinary.js";
 
-// OPTIONAL (uncomment if you have firebase admin set up for token verification)
-// import admin from "../config/firebaseAdmin.js";
+
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" }); // temp storage for multer
+const upload = multer({ dest: "uploads/" }); 
 
-// Try to get uid from Authorization Bearer token (optional)
+
 async function uidFromAuthHeader(req) {
   try {
     const auth = req.headers.authorization || "";
@@ -19,7 +18,7 @@ async function uidFromAuthHeader(req) {
     const idToken = auth.split(" ")[1];
     if (!idToken) return null;
 
-    // If you imported admin, use it. If not, this will throw and return null.
+
     if (typeof admin === "undefined") return null;
 
     const decoded = await admin.auth().verifyIdToken(idToken);
@@ -232,7 +231,7 @@ router.get("/businesses", async (req, res) => {
       const b = u.business || {};
       const ownerId = u.uid ?? u._id;
       return {
-        id: ownerId,                 // use owner's uid/_id as stable id
+        id: ownerId,                
         ownerUid: ownerId,
         name: b.name ?? "Unnamed Business",
         tagline: b.tagline || "",
