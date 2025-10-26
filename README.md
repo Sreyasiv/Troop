@@ -53,8 +53,9 @@ From finding events and resources to supporting freelancers and businesses, Troo
 
 ---
 
-## 🌐 Deployments  
 
+## 🌐 Deployments  
+``` Try with .vistas.ac.in mail ids.```
 - **Frontend**: [Troop on Netlify](https://thetroops.netlify.app/)  
 - **Backend**: [Troop API on Render](https://s75-sreya-capstone-troop-1.onrender.com)  
 
