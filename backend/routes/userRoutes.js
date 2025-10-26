@@ -5,8 +5,6 @@ import multer from "multer";
 import User from "../models/UserSchema.js";
 import { uploadToCloudinary } from "../cloudinary/cloudinary.js";
 
-
-
 const router = express.Router();
 const upload = multer({ dest: "uploads/" }); 
 
@@ -18,7 +16,7 @@ async function uidFromAuthHeader(req) {
     const idToken = auth.split(" ")[1];
     if (!idToken) return null;
 
-
+  
     if (typeof admin === "undefined") return null;
 
     const decoded = await admin.auth().verifyIdToken(idToken);
@@ -179,7 +177,7 @@ router.post("/upload-logo/:uid", upload.single("logo"), async (req, res) => {
   }
 });
 
-// PATCH /business/:uid — update and also return business explicitly
+
 router.patch("/business/:uid", async (req, res) => {
   try {
     const { uid } = req.params;
@@ -196,7 +194,6 @@ router.patch("/business/:uid", async (req, res) => {
 
     if (!updatedUser) return res.status(404).json({ error: "User not found" });
 
-    // Ensure business object contains ownerUid for frontend convenience
     const businessWithOwner = {
       ...(updatedUser.business || {}),
       ownerUid: updatedUser.uid ?? updatedUser._id,
@@ -209,7 +206,7 @@ router.patch("/business/:uid", async (req, res) => {
   }
 });
 
-// GET /businesses — include tagline in response cards and ensure consistent ownerUid/id
+
 router.get("/businesses", async (req, res) => {
   try {
     const businesses = await User.find(
@@ -231,7 +228,7 @@ router.get("/businesses", async (req, res) => {
       const b = u.business || {};
       const ownerId = u.uid ?? u._id;
       return {
-        id: ownerId,                
+        id: ownerId,                 
         ownerUid: ownerId,
         name: b.name ?? "Unnamed Business",
         tagline: b.tagline || "",
@@ -251,7 +248,7 @@ router.get("/businesses", async (req, res) => {
   }
 });
 
-// GET /profile — returns user and business (business.ownerUid ensured)
+
 router.get("/profile", async (req, res) => {
   try {
     const tokenUid = await uidFromAuthHeader(req);

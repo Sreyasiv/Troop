@@ -17,9 +17,9 @@ const BusinessSetup = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-
+  // where we came from: 'signup' | 'shops' | undefined
   const from = location.state?.from;
-
+  // optional explicit redirect (e.g. "/lounge")
   const redirectTo = location.state?.redirectTo;
 
   const uidFromState = location.state?.uid;
@@ -93,7 +93,7 @@ const BusinessSetup = () => {
 
       const data = await patchRes.json();
 
-      
+      // prefer explicit business returned by backend, else build a normalized object
       const returnedBusiness =
         data?.business ??
         data?.user?.business ?? {
@@ -106,7 +106,7 @@ const BusinessSetup = () => {
           ownerUid: uid,
         };
 
-      
+      // save for signup flow (Shops will read this)
       try {
         sessionStorage.setItem("newBusiness", JSON.stringify(returnedBusiness));
       } catch (e) {
@@ -114,7 +114,7 @@ const BusinessSetup = () => {
       }
 
       if (from === "signup") {
-        
+        // finish signup flow -> lounge (shops will pick up from sessionStorage)
         navigate("/lounge");
         return;
       }
@@ -124,7 +124,7 @@ const BusinessSetup = () => {
         return;
       }
 
-     
+      // default: user came from Shops (+) -> go back to shops with state for instant UI update
       navigate("/shops", { state: { newBusiness: returnedBusiness } });
     } catch (err) {
       console.error("Business setup error:", err);
