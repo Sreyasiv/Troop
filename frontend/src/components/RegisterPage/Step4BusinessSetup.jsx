@@ -1,4 +1,4 @@
-
+// BusinessSetup.jsx
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.jpeg";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,14 +7,20 @@ import { auth } from "../../firebase";
 const BusinessSetup = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [name, setName] = useState("");
   const [tagline, setTagline] = useState("");
-  const [logoFile, setLogoFile] = useState(null); 
+  const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
   const [whatsapp, setWhatsapp] = useState("");
   const [instagram, setInstagram] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // where we came from: 'signup' | 'shops' | undefined
+  const from = location.state?.from;
+  // optional explicit redirect (e.g. "/lounge")
+  const redirectTo = location.state?.redirectTo;
 
   const uidFromState = location.state?.uid;
   const uid = uidFromState || (auth.currentUser && auth.currentUser.uid);
@@ -65,7 +71,6 @@ const BusinessSetup = () => {
         logoUrl = uploadData.url;
       }
 
-
       const patchRes = await fetch(
         `${import.meta.env.VITE_API_URL}/api/users/business/${uid}`,
         {
@@ -87,10 +92,40 @@ const BusinessSetup = () => {
       }
 
       const data = await patchRes.json();
-      console.log("Business saved:", data);
 
+      // prefer explicit business returned by backend, else build a normalized object
+      const returnedBusiness =
+        data?.business ??
+        data?.user?.business ?? {
+          id: data?.business?._id ?? null,
+          name,
+          tagline,
+          logo: logoUrl,
+          whatsapp,
+          instagram,
+          ownerUid: uid,
+        };
 
-      navigate("/lounge");
+      // save for signup flow (Shops will read this)
+      try {
+        sessionStorage.setItem("newBusiness", JSON.stringify(returnedBusiness));
+      } catch (e) {
+        console.warn("Could not write newBusiness to sessionStorage", e);
+      }
+
+      if (from === "signup") {
+        // finish signup flow -> lounge (shops will pick up from sessionStorage)
+        navigate("/lounge");
+        return;
+      }
+
+      if (redirectTo) {
+        navigate(redirectTo);
+        return;
+      }
+
+      // default: user came from Shops (+) -> go back to shops with state for instant UI update
+      navigate("/shops", { state: { newBusiness: returnedBusiness } });
     } catch (err) {
       console.error("Business setup error:", err);
       setError(err.message || "Failed to save business. Try again.");
@@ -110,7 +145,7 @@ const BusinessSetup = () => {
       </div>
 
       <div className="bg-[#2D2B2B] px-6 sm:px-8 md:px-10 py-6 sm:py-8 md:py-10 rounded-3xl shadow-lg w-full max-w-lg md:max-w-2xl flex flex-col gap-6 relative z-20">
-
+        {/* name */}
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">
             Name of your Business <span className="text-red-500">*</span>
@@ -124,7 +159,7 @@ const BusinessSetup = () => {
           />
         </div>
 
-
+        {/* tagline */}
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">
             Add a Tagline
@@ -138,7 +173,7 @@ const BusinessSetup = () => {
           />
         </div>
 
-
+        {/* logo upload */}
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">
             Upload your Business Logo
@@ -189,7 +224,7 @@ const BusinessSetup = () => {
           </div>
         </div>
 
-
+        {/* whatsapp */}
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">Whatsapp Business</label>
           <input
@@ -201,7 +236,7 @@ const BusinessSetup = () => {
           />
         </div>
 
-
+        {/* instagram */}
         <div>
           <label className="block font-semibold text-base sm:text-lg mb-2">Instagram Page Link</label>
           <input
@@ -212,7 +247,6 @@ const BusinessSetup = () => {
             className="w-full bg-[#1A1A1A] text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#D4852D]"
           />
         </div>
-
 
         <button
           onClick={handleSubmit}

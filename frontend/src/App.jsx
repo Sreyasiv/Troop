@@ -18,6 +18,7 @@ import Index from "./pages/landing/landingPage";
 import Compa from "./pages/Compa/Help"
 import ProfilePage from "./pages/profile/profile";
 import ClubBuzz from "./pages/clubs/clubBuzz";
+import AboutDevPage from "./pages/landing/Aboutdevdrawer";
 
 
 
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/thrift" element={<Thrift />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/club-buzz" element={<ClubBuzz />} />
+        <Route path="/dev" element={<AboutDevPage/>}/>
 
         
 

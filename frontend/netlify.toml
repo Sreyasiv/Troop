@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "build"  # or "dist" if you're using Vite
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
